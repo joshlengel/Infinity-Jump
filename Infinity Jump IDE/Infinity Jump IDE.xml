@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="" name="Infinity Jump IDE">
+	<property environment="env"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+	<path id="JavaFX.classpath">
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.base.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.controls.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.swing.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.fxml.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.graphics.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.media.jar"/>
+        <pathelement location="lib/JavaFX-13.0.2/lib/javafx.web.jar"/>
+    </path>
+    <path id="Infinity Jump IDE.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/lwjgl/jars/lwjgl.jar"/>
+        <pathelement location="lib/lwjgl/jars/lwjgl-glfw.jar"/>
+        <pathelement location="lib/lwjgl/jars/lwjgl-opengl.jar"/>
+    	<pathelement location="lib/lwjgl/jars/lwjgl-openal.jar"/>
+        <pathelement location="lib/lwjgl/natives/lwjgl-glfw-natives-windows.jar"/>
+        <pathelement location="lib/lwjgl/natives/lwjgl-natives-windows.jar"/>
+        <pathelement location="lib/lwjgl/natives/lwjgl-opengl-natives-windows.jar"/>
+    	<pathelement location="lib/lwjgl/natives/lwjgl-openal-natives-windows.jar"/>
+        <path refid="JavaFX.classpath"/>
+        <pathelement location="lib/lua/luaj-jse-3.0.1.jar"/>
+    	<pathelement location="lib/Infinity Jump/Infinity Jump.jar"/>
+    </path>
+	<path id="jar.JavaFX.classpath">
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.base.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.controls.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.swing.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.fxml.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.graphics.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.media.jar"/>
+        <pathelement location="dist/lib/JavaFX-13.0.2/lib/javafx.web.jar"/>
+    </path>
+    <path id="jar.Infinity Jump IDE.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="dist/lib/lwjgl/jars/lwjgl.jar"/>
+        <pathelement location="dist/lib/lwjgl/jars/lwjgl-glfw.jar"/>
+        <pathelement location="dist/lib/lwjgl/jars/lwjgl-opengl.jar"/>
+    	<pathelement location="dist/lib/lwjgl/jars/lwjgl-openal.jar"/>
+    	<pathelement location="dist/lib/lwjgl/natives/lwjgl-glfw-natives-windows.jar"/>
+        <pathelement location="dist/lib/lwjgl/natives/lwjgl-natives-windows.jar"/>
+        <pathelement location="dist/lib/lwjgl/natives/lwjgl-opengl-natives-windows.jar"/>
+    	<pathelement location="dist/lib/lwjgl/natives/lwjgl-openal-natives-windows.jar"/>
+        <path refid="jar.JavaFX.classpath"/>
+    	<pathelement location="dist/lib/lua/luaj-jse-3.0.1.jar"/>
+    	<pathelement location="dist/lib/Infinity Jump/Infinity Jump.jar"/>
+    </path>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+	<target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+            	<exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target depends="clean,init" name="build">
+    	<ant antfile="../Infinity Jump v2.0/Infinity Jump v2.0.xml" target="build" useNativeBaseDir="true"/>
+    	<ant antfile="../Infinity Jump v2.0/Infinity Jump v2.0.xml" target="export" useNativeBaseDir="true"/>
+    	<javac debug="true" debuglevel="source,lines,vars" destdir="bin" source="${source}" target="${target}" includeantruntime="false">
+        	<src path="src"/>
+        	<classpath refid="Infinity Jump IDE.classpath"/>
+    	</javac>
+    </target>
+	<target name="export">
+		<manifestclasspath property="manifest.path" jarfile="dist/lib/Infinity Jump/Infinity Jump IDE.jar" maxParentLevels="4">
+			<classpath refid="jar.Infinity Jump IDE.classpath"/>
+		</manifestclasspath>
+    	<jar basedir="bin" destfile="dist/lib/Infinity Jump/Infinity Jump IDE.jar">
+    		<manifest>
+	    	    <attribute name="Manifest-Version" value="1.0.0"/>
+	    		<attribute name="Created-By" value="Josh lengel"/>
+	    		<attribute name="Main-Class" value="com.infinityjump.ide.window.Window"/>
+    			<attribute name="Class-Path" value="${manifest.path}"/>
+	    	</manifest>
+    	</jar>
+    	<zip basedir="src" destfile="dist/Infinity Jump IDE-src.zip"/>
+    </target>
+</project>

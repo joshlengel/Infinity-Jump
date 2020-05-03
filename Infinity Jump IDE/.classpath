@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/Infinity Jump/Infinity Jump.jar" sourcepath="lib/Infinity Jump/Infinity Jump-src.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL"/>
+	<classpathentry kind="output" path="bin"/>
+	<referencedentry kind="lib" path="lib/lua/luaj-jse-3.0.1.jar" sourcepath="lib/lua/luaj-sources-3.0.1.jar"/>
+</classpath>
