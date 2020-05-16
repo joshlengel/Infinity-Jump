@@ -427,7 +427,63 @@ public class LevelView extends Pane {
 		drawRect(context, getRect(target), theme.getTargetColor(), zScrollX, zScrollY);
 		
 		for (Quad quad : quads.values()) {
-			drawRect(context, getRect(quad), theme.forQuad(quad.getType()), zScrollX, zScrollY);
+			Rectangle dRect = getRect(quad);
+			
+			drawRect(context, dRect, theme.forQuad(quad.getType()), zScrollX, zScrollY);
+			
+			if (quad instanceof TeleportQuad) {
+				TeleportQuad tQuad = (TeleportQuad)quad;
+				
+				double x, y;
+				
+				final int arrowSize = (int) (0.05 * drawable.getWidth() * 0.5 * zoom);
+				final int wingSize = (int) (0.0125 * drawable.getWidth() * 0.5 * zoom);
+				
+				switch(tQuad.getEjectType()) {
+					case LEFT_BOTTOM:
+						x = dRect.getX() + zScrollX + 2;
+						y = (dRect.getY() + dRect.getHeight()) * aspectRatio + zScrollY - 2;
+						
+						// draw arrow
+						context.setStroke(Color.BLACK);
+						context.strokeLine(x, y, x + arrowSize, y - arrowSize);
+						context.strokeLine(x, y, x, y - wingSize);
+						context.strokeLine(x, y, x + wingSize, y);
+						break;
+						
+					case LEFT_TOP:
+						x = dRect.getX() + zScrollX + + 2;
+						y = dRect.getY() * aspectRatio + zScrollY + 2;
+						
+						// draw arrow
+						context.setStroke(Color.BLACK);
+						context.strokeLine(x, y, x + arrowSize, y + arrowSize);
+						context.strokeLine(x, y, x, y + wingSize);
+						context.strokeLine(x, y, x + wingSize, y);
+						break;
+						
+					case RIGHT_BOTTOM:
+						x = dRect.getX() + zScrollX + dRect.getWidth() - 2;
+						y = (dRect.getY() + dRect.getHeight()) * aspectRatio + zScrollY - 2;
+						
+						// draw arrow
+						context.setStroke(Color.BLACK);
+						context.strokeLine(x, y, x - arrowSize, y - arrowSize);
+						context.strokeLine(x, y, x, y - wingSize);
+						context.strokeLine(x, y, x - wingSize, y);
+						break;
+					case RIGHT_TOP:
+						x = dRect.getX() + zScrollX + dRect.getWidth() - 2;
+						y = dRect.getY() * aspectRatio + zScrollY + 2;
+						
+						// draw arrow
+						context.setStroke(Color.BLACK);
+						context.strokeLine(x, y, x - arrowSize, y + arrowSize);
+						context.strokeLine(x, y, x, y + wingSize);
+						context.strokeLine(x, y, x - wingSize, y);
+						break;
+				}
+			}
 		}
 		
 		if (spawningQuad != null) {
@@ -539,7 +595,8 @@ public class LevelView extends Pane {
 			builder.append("type=").append(quad.getType().toString());
 			
 			if(quad instanceof TeleportQuad) {
-				builder.append(", channel=").append(((TeleportQuad)quad).getChannel());
+				builder.append(", channel=").append(((TeleportQuad)quad).getChannel()).append(", ");
+				builder.append("eject-type=").append(((TeleportQuad)quad).getEjectType().toString());
 			}
 			
 			builder.append("]\n");
@@ -707,7 +764,7 @@ public class LevelView extends Pane {
 			case BOUNCY: nQuad = new BouncyQuad(left, right, bottom, top); break;
 			case DEADLY: nQuad = new DeadlyQuad(left, right, bottom, top); break;
 			case STICKY: nQuad = new StickyQuad(left, right, bottom, top); break;
-			case TELEPORT: nQuad = new TeleportQuad(left, right, bottom, top, 0); break;
+			case TELEPORT: nQuad = new TeleportQuad(left, right, bottom, top, 0, TeleportQuad.EjectType.LEFT_BOTTOM); break;
 			default: 
 			case NORMAL: nQuad = new Quad(left, right, bottom, top); break;
 		}

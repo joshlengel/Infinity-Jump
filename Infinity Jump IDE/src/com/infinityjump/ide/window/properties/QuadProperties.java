@@ -108,11 +108,11 @@ public class QuadProperties extends PropertyPane {
 		typeField.valueProperty().addListener((ov, o, n) -> {
 			Type type = Type.parseType(n);
 			
-			quad.setType(Type.parseType(n));
+			quad.setType(type);
 			
 			if (type == Type.TELEPORT) {
 				TeleportQuad tQuad = (TeleportQuad)view.setNewQuadType(entry.getKey(), Type.TELEPORT);
-				tQuadProps = new TeleportQuadProperties(tQuad, properties);
+				tQuadProps = new TeleportQuadProperties(tQuad, properties, view);
 			} else {
 				properties.getChildren().remove(tQuadProps);
 			}
@@ -141,7 +141,7 @@ public class QuadProperties extends PropertyPane {
 		properties.getChildren().addAll(edgesProperty, miscProperty);
 		
 		if (quad.getType() == Type.TELEPORT) {
-			tQuadProps = new TeleportQuadProperties((TeleportQuad)quad, properties);
+			tQuadProps = new TeleportQuadProperties((TeleportQuad)quad, properties, view);
 			properties.getChildren().add(tQuadProps);
 		}
 		

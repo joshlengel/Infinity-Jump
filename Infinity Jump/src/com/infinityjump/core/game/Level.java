@@ -64,6 +64,7 @@ public final class Level {
 					String type = null;
 					
 					Integer linkID = null; // only for teleportation
+					String ejectType = null; // only for teleportation
 					
 					String[] args = pComma.split(pBraces.split(line)[1]);
 					
@@ -84,6 +85,8 @@ public final class Level {
 							type = pair[1];
 						} else if (pair[0].contentEquals("channel")) {
 							linkID = Integer.parseInt(pair[1]);
+						} else if (pair[0].contentEquals("eject-type")) {
+							ejectType = pair[1];
 						}
 					}
 					
@@ -100,12 +103,14 @@ public final class Level {
 					case "bouncy": quad = new BouncyQuad(left, right, bottom, top); break;
 					case "sticky": quad = new StickyQuad(left, right, bottom, top); break;
 					case "teleport":
-						if (linkID == null) {
-							Logger.getAPI().error("Must specify channel property of teleport quad");
+						TeleportQuad.EjectType eT = TeleportQuad.EjectType.parseType(ejectType);
+						
+						if (linkID == null || eT == null) {
+							Logger.getAPI().error("Must specify channel and eject-type properties of teleport quad");
 							return;
 						}
 						
-						quad = new TeleportQuad(left, right, bottom, top, linkID);
+						quad = new TeleportQuad(left, right, bottom, top, linkID, eT);
 						break;
 					default:
 						Logger.getAPI().error("Quad must define type");

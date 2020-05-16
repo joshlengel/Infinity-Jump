@@ -11,22 +11,50 @@ import com.infinityjump.core.game.base.Quad;
 
 public class TeleportQuad extends Quad {
 
+	public static enum EjectType {
+		LEFT_BOTTOM("left-bottom"),
+		RIGHT_BOTTOM("right-bottom"),
+		LEFT_TOP("left-top"),
+		RIGHT_TOP("right-top");
+		
+		private String name;
+		
+		EjectType(String name) { this.name = name; }
+		
+		public static EjectType parseType(String str) {
+			for (EjectType type : EjectType.values()) {
+				if (type.name.contentEquals(str)) return type;
+			}
+			
+			return null;
+		}
+		
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+	
 	private int linkID;
 	private TeleportQuad cacheLinked;
 	
 	private boolean shouldTeleport;
 	
-	public TeleportQuad(float left, float right, float bottom, float top, int linkID) {
-		this(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top), linkID);
+	private EjectType ejectType;
+	
+	public TeleportQuad(float left, float right, float bottom, float top, int linkID, EjectType ejectType) {
+		this(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top), linkID, ejectType);
 	}
 	
-	public TeleportQuad(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top, int linkID) {
+	public TeleportQuad(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top, int linkID, EjectType ejectType) {
 		super(left, right, bottom, top);
 		
 		this.type = Type.TELEPORT;
 		
 		this.linkID = linkID;
 		this.shouldTeleport = true;
+		
+		this.ejectType = ejectType;
 	}
 
 	public void updateStartFrame(Level level, BigDecimal dt) {
@@ -73,6 +101,25 @@ public class TeleportQuad extends Quad {
 			collision.px = cacheLinked.x;
 			collision.py = cacheLinked.y;
 			
+			switch (cacheLinked.ejectType) {
+				case LEFT_BOTTOM:
+					collision.vx = player.getVX().abs().negate();
+					collision.vy = player.getVY().abs().negate();
+					break;
+				case LEFT_TOP:
+					collision.vx = player.getVX().abs().negate();
+					collision.vy = player.getVY().abs();
+					break;
+				case RIGHT_BOTTOM:
+					collision.vx = player.getVX().abs();
+					collision.vy = player.getVY().abs().negate();
+					break;
+				case RIGHT_TOP:
+					collision.vx = player.getVX().abs();
+					collision.vy = player.getVY().abs();
+					break;
+			}
+			
 			cacheLinked.shouldTeleport = false;
 		}
 	}
@@ -90,8 +137,16 @@ public class TeleportQuad extends Quad {
 		this.linkID = linkID;
 	}
 	
+	public EjectType getEjectType() {
+		return ejectType;
+	}
+	
+	public void setEjectType(EjectType ejectType) {
+		this.ejectType = ejectType;
+	}
+	
 	@Override
 	public TeleportQuad clone() {
-		return new TeleportQuad(left, right, bottom, top, linkID);
+		return new TeleportQuad(left, right, bottom, top, linkID, ejectType);
 	}
 }
