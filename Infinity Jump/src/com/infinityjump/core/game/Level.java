@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import com.infinityjump.core.api.Input;
 import com.infinityjump.core.api.Input.InputAPI.DragEvent;
+import com.infinityjump.core.api.Logger;
 import com.infinityjump.core.game.base.Boundary;
 import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.Quad;
@@ -19,7 +20,6 @@ import com.infinityjump.core.game.customizable.BouncyQuad;
 import com.infinityjump.core.game.customizable.DeadlyQuad;
 import com.infinityjump.core.game.customizable.StickyQuad;
 import com.infinityjump.core.game.customizable.TeleportQuad;
-import com.infinityjump.core.api.Logger;
 
 public final class Level {
 
