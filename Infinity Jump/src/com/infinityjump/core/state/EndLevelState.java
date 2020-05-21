@@ -2,13 +2,13 @@ package com.infinityjump.core.state;
 
 import java.util.Map;
 
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.graphics.GraphicsAssets;
 
 public class EndLevelState implements State {
 
 	@Override
 	public void enter(Object[] args, Map<String, Object> resources) {
-		Quad.terminate();
+		GraphicsAssets.terminate();
 		StateMachine.terminate();
 	}
 

@@ -7,8 +7,11 @@ uniform vec2 scale;
 
 uniform float aspectRatio;
 
+uniform float shiftX;
+
 void main() {
 	vec2 coord = vertex * scale + offset;
+	coord.x += shiftX;
 	coord.y = (coord.y + 1.0) * aspectRatio - 1.0;
 
 	gl_Position = vec4(coord, 0.0, 1.0);

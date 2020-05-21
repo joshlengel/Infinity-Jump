@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.api.Logger;
 import com.infinityjump.core.game.Collision;
+import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.Block;
 
-public class TeleportQuad extends Quad {
+public class TeleportBlock extends Block {
 
 	public static enum EjectType {
 		LEFT_BOTTOM("left-bottom"),
@@ -36,51 +38,56 @@ public class TeleportQuad extends Quad {
 	}
 	
 	private int linkID;
-	private TeleportQuad cacheLinked;
+	private TeleportBlock cacheLinked;
 	
 	private boolean shouldTeleport;
 	
 	private EjectType ejectType;
 	
-	public TeleportQuad(float left, float right, float bottom, float top, int linkID, EjectType ejectType) {
-		this(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top), linkID, ejectType);
-	}
-	
-	public TeleportQuad(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top, int linkID, EjectType ejectType) {
+	public TeleportBlock(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top, int linkID, EjectType ejectType) {
 		super(left, right, bottom, top);
-		
-		this.type = Type.TELEPORT;
 		
 		this.linkID = linkID;
 		this.shouldTeleport = true;
 		
 		this.ejectType = ejectType;
 	}
+	
+	@Override
+	public Color getColor(Theme theme) {
+		return theme.getTeleportQuadColor();
+	}
+	
+	@Override
+	public Type getType() {
+		return Type.TELEPORT;
+	}
 
-	public void updateStartFrame(Level level, BigDecimal dt) {
+	@Override
+	public void update(Level level, BigDecimal dt) {
 		this.cacheLinked = null;
 		
-		level.getQuads().forEach((id, quad) -> {
-			if (quad != this && quad instanceof TeleportQuad) {
-				TeleportQuad tQuad = (TeleportQuad)quad;
+		level.getBlocks().forEach((id, block) -> {
+			if (block != this && block instanceof TeleportBlock) {
+				TeleportBlock tBlock = (TeleportBlock)block;
 				
-				if (tQuad.linkID == this.linkID) {
+				if (tBlock.linkID == this.linkID) {
 					if (this.cacheLinked != null) {
-						Logger.getAPI().error("Teleport quad with linkID '" + linkID + "' cannot link to multiple other quads");
+						Logger.getAPI().error("Teleport block with linkID '" + linkID + "' cannot link to multiple other blocks");
 					}
 					
-					this.cacheLinked = tQuad;
+					this.cacheLinked = tBlock;
 				}
 			}
 		});
 		
 		if (this.cacheLinked == null) {
-			Logger.getAPI().error("No teleport quad with linkID '" + linkID + "' found");
+			Logger.getAPI().error("No teleport block with linkID '" + linkID + "' found");
 		}
 	}
 	
 	@Override
-	public void update(Player player, Collision collision, BigDecimal dt) {
+	public void checkCollision(Player player, Collision collision) {
 		if (!shouldTeleport) {
 			if (player.getLeft().compareTo(right) > 0 || player.getRight().compareTo(left) < 0 || player.getBottom().compareTo(top) > 0 || player.getTop().compareTo(bottom) < 0) {
 				shouldTeleport = true;
@@ -89,11 +96,11 @@ public class TeleportQuad extends Quad {
 			return;
 		}
 		
-		super.update(player, collision, dt);
+		super.checkCollision(player, collision);
 	}
 	
 	@Override
-	public void collided(Player player, Collision collision, BigDecimal dt) {
+	public void resolveCollision(Player player, Collision collision) {
 		if (this.cacheLinked == null)
 			return;
 		
@@ -124,11 +131,6 @@ public class TeleportQuad extends Quad {
 		}
 	}
 	
-	@Override
-	public void render(Theme theme, float scrollX, float scrollY) {
-		render(theme.getTeleportQuadColor(), scrollX, scrollY);
-	}
-	
 	public int getChannel() {
 		return linkID;
 	}
@@ -145,8 +147,12 @@ public class TeleportQuad extends Quad {
 		this.ejectType = ejectType;
 	}
 	
+	public TeleportBlock getCacheLinked() {
+		return cacheLinked;
+	}
+	
 	@Override
-	public TeleportQuad clone() {
-		return new TeleportQuad(left, right, bottom, top, linkID, ejectType);
+	public TeleportBlock clone() {
+		return new TeleportBlock(left, right, bottom, top, linkID, ejectType);
 	}
 }

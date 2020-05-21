@@ -2,7 +2,7 @@ package com.infinityjump.core.game;
 
 import java.math.BigDecimal;
 
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.quad.QuadCollidable;
 
 public class Collision {
 
@@ -14,7 +14,7 @@ public class Collision {
 		NONE
 	}
 	
-	public Quad quad;
+	public QuadCollidable quad;
 	
 	public BigDecimal time;
 	

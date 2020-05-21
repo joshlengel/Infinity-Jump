@@ -9,7 +9,7 @@ import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.script.Script;
 import com.infinityjump.game.Launcher;
 import com.infinityjump.ide.window.LuaEditorView;
-import com.infinityjump.ide.window.LevelView;
+import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

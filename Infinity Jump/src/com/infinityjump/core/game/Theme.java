@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.infinityjump.core.api.Logger;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Type;
 
 public class Theme {
 
@@ -71,7 +71,7 @@ public class Theme {
 		}
 	}
 	
-	public Color forQuad(Quad.Type type) {
+	public Color forQuad(Type type) {
 		switch (type) {
 		case NORMAL: return defaultQuadColor;
 		case DEADLY: return deadlyQuadColor;

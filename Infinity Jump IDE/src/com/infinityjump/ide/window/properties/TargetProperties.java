@@ -2,8 +2,8 @@ package com.infinityjump.ide.window.properties;
 
 import java.math.BigDecimal;
 
-import com.infinityjump.core.game.base.Quad;
-import com.infinityjump.ide.window.LevelView;
+import com.infinityjump.core.game.base.Target;
+import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,11 +12,11 @@ import javafx.scene.layout.GridPane;
 
 public class TargetProperties extends PropertyPane {
 
-	private Quad quad;
+	private Target target;
 	private TextField leftField, rightField, bottomField, topField;
 	
-	public TargetProperties(Quad target, LevelView view) {
-		this.quad = target;
+	public TargetProperties(Target target, LevelView view) {
+		this.target = target;
 		
 		TitledPane edgesProperty = new TitledPane();
 		edgesProperty.setText("Target properties");
@@ -90,9 +90,9 @@ public class TargetProperties extends PropertyPane {
 
 	@Override
 	public void update() {
-		leftField.setText(Float.toString(quad.getLeft().floatValue()));
-		rightField.setText(Float.toString(quad.getRight().floatValue()));
-		bottomField.setText(Float.toString(quad.getBottom().floatValue()));
-		topField.setText(Float.toString(quad.getTop().floatValue()));
+		leftField.setText(Float.toString(target.getLeft().floatValue()));
+		rightField.setText(Float.toString(target.getRight().floatValue()));
+		bottomField.setText(Float.toString(target.getBottom().floatValue()));
+		topField.setText(Float.toString(target.getTop().floatValue()));
 	}
 }

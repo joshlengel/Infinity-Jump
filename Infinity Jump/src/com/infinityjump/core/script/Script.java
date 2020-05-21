@@ -11,7 +11,7 @@ import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import com.infinityjump.core.game.Level;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Block;
 
 public class Script {
 
@@ -65,25 +65,25 @@ public class Script {
 	public void reset(Level level) {
 		quads = new LuaTable();
 		
-		for (Entry<Integer, Quad> entry : level.getQuads().entrySet()) {
-			Quad quad = entry.getValue();
+		for (Entry<Integer, Block> entry : level.getBlocks().entrySet()) {
+			Block block = entry.getValue();
 			
-			SetX setX = new SetX(quad);
-			SetY setY = new SetY(quad);
-			SetVX setVX = new SetVX(quad);
-			SetVY setVY = new SetVY(quad);
+			SetX setX = new SetX(block);
+			SetY setY = new SetY(block);
+			SetVX setVX = new SetVX(block);
+			SetVY setVY = new SetVY(block);
 			
 			LuaTable quadTable = new LuaTable();
-			quadTable.rawset("left", quad.getLeft().floatValue());
-			quadTable.rawset("right", quad.getRight().floatValue());
-			quadTable.rawset("bottom", quad.getBottom().floatValue());
-			quadTable.rawset("top", quad.getTop().floatValue());
-			quadTable.rawset("x", quad.getX().floatValue());
-			quadTable.rawset("y", quad.getY().floatValue());
-			quadTable.rawset("width", quad.getWidth().floatValue());
-			quadTable.rawset("height", quad.getHeight().floatValue());
-			quadTable.rawset("vx", quad.getVX().floatValue());
-			quadTable.rawset("vy", quad.getVY().floatValue());
+			quadTable.rawset("left", block.getLeft().floatValue());
+			quadTable.rawset("right", block.getRight().floatValue());
+			quadTable.rawset("bottom", block.getBottom().floatValue());
+			quadTable.rawset("top", block.getTop().floatValue());
+			quadTable.rawset("x", block.getX().floatValue());
+			quadTable.rawset("y", block.getY().floatValue());
+			quadTable.rawset("width", block.getWidth().floatValue());
+			quadTable.rawset("height", block.getHeight().floatValue());
+			quadTable.rawset("vx", block.getVX().floatValue());
+			quadTable.rawset("vy", block.getVY().floatValue());
 			
 			quadTable.rawset("setX", setX);
 			quadTable.rawset("setY", setY);
@@ -119,20 +119,20 @@ public class Script {
 	public void update(double dt, Level level) {
 		try {
 			// get new quads
-			for (Entry<Integer, Quad> entry : level.getQuads().entrySet()) {
-				Quad quad = entry.getValue();
+			for (Entry<Integer, Block> entry : level.getBlocks().entrySet()) {
+				Block block = entry.getValue();
 				
 				LuaTable quadTable = quads.get(entry.getKey()).checktable();
-				quadTable.rawset("left", quad.getLeft().floatValue());
-				quadTable.rawset("right", quad.getRight().floatValue());
-				quadTable.rawset("bottom", quad.getBottom().floatValue());
-				quadTable.rawset("top", quad.getTop().floatValue());
-				quadTable.rawset("x", quad.getX().floatValue());
-				quadTable.rawset("y", quad.getY().floatValue());
-				quadTable.rawset("width", quad.getWidth().floatValue());
-				quadTable.rawset("height", quad.getHeight().floatValue());
-				quadTable.rawset("vx", quad.getVX().floatValue());
-				quadTable.rawset("vy", quad.getVY().floatValue());
+				quadTable.rawset("left", block.getLeft().floatValue());
+				quadTable.rawset("right", block.getRight().floatValue());
+				quadTable.rawset("bottom", block.getBottom().floatValue());
+				quadTable.rawset("top", block.getTop().floatValue());
+				quadTable.rawset("x", block.getX().floatValue());
+				quadTable.rawset("y", block.getY().floatValue());
+				quadTable.rawset("width", block.getWidth().floatValue());
+				quadTable.rawset("height", block.getHeight().floatValue());
+				quadTable.rawset("vx", block.getVX().floatValue());
+				quadTable.rawset("vy", block.getVY().floatValue());
 			}
 			
 			update.call(LuaValue.valueOf(dt));

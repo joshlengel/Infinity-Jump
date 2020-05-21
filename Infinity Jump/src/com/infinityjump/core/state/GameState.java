@@ -9,6 +9,7 @@ import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.LevelStream;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.sound.Sounds;
+import com.infinityjump.core.graphics.GraphicsAssets;
 import com.infinityjump.core.script.Script;
 import com.infinityjump.core.script.ScriptStream;
 
@@ -34,6 +35,8 @@ public class GameState implements State {
 		
 		script.read(level);
 		script.setup(level);
+		
+		GraphicsAssets.assertLoaded();
 	}
 
 	@Override

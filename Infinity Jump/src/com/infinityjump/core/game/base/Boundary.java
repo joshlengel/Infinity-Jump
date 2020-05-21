@@ -5,56 +5,73 @@ import java.math.RoundingMode;
 
 import com.infinityjump.core.game.Collision;
 import com.infinityjump.core.game.Color;
+import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.base.quad.QuadCollidable;
+import com.infinityjump.core.game.base.quad.QuadRenderable;
+import com.infinityjump.core.game.base.quad.QuadShapeImpl;
 
-public class Boundary extends Quad {
+public class Boundary extends QuadShapeImpl implements QuadRenderable, QuadCollidable {
 
-	public Boundary(float left, float right, float bottom, float top) {
+	/// TODO Move to config files
+	private static final BigDecimal SURFACE_DRAG = new BigDecimal(5.0);
+	
+	private BigDecimal cacheDT;
+	
+	public Boundary(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
 		super(left, right, bottom, top);
-	}
-
-	@Override
-	public void render(Theme theme, float scrollX, float scrollY) {
-		Color backgroundColor = theme.getBackgroundColor();
-		
-		render(backgroundColor, scrollX, scrollY);
 	}
 	
 	@Override
-	public void update(Player player, Collision collision, BigDecimal dt) {
+	public Color getColor(Theme theme) {
+		return theme.getBackgroundColor();
+	}
+	
+	@Override
+	public Type getType() {
+		return Type.BOUNDARY;
+	}
+
+	@Override
+	public void update(Level level, BigDecimal dt) {
+		cacheDT = dt;
+	}
+	
+	@Override
+	public void checkCollision(Player player, Collision collision) {
 		// calculate collision
-		if (player.left.compareTo(left) >= 0 && player.ivx.compareTo(BigDecimal.ZERO) < 0) {
+		if (player.getLeft().compareTo(left) >= 0 && player.getIVX().compareTo(BigDecimal.ZERO) < 0) {
 			// ix = left
-			// ix = player.vx * t + player.left
-			// t = (left - player.left) / player.vx
+			// ix = player.vx * t + player.getLeft()
+			// t = (left - player.getLeft()) / player.vx
 			
-			if (player.ivx.compareTo(BigDecimal.ZERO) != 0) {
-				BigDecimal time = left.subtract(player.left).divide(player.ivx, 10, RoundingMode.DOWN);
+			if (player.getIVX().compareTo(BigDecimal.ZERO) != 0) {
+				BigDecimal time = left.subtract(player.getLeft()).divide(player.getIVX(), 10, RoundingMode.DOWN);
 				
 				if (time.compareTo(collision.time) <= 0) {
 					collision.quad = this;
 					
-					collision.px = left.add(player.hWidth);
-					collision.py = player.y.add(player.ivy.multiply(time));
+					collision.px = left.add(player.getHWidth());
+					collision.py = player.getY().add(player.getIVY().multiply(time));
 					
 					collision.time = time;
 					
 					collision.type = Collision.Type.LEFT;
 				}
 			}
-		} else if (right.compareTo(player.right) >= 0 && player.ivx.compareTo(BigDecimal.ZERO) > 0) {
+		} else if (right.compareTo(player.getRight()) >= 0 && player.getIVX().compareTo(BigDecimal.ZERO) > 0) {
 			// ix = right
-			// ix = player.vx * t + player.right
-			// t = (right - player.right) / player.vx
+			// ix = player.vx * t + player.getRight()
+			// t = (right - player.getRight()) / player.vx
 			
-			if (player.ivx.compareTo(BigDecimal.ZERO) != 0) {
-				BigDecimal time = right.subtract(player.right).divide(player.ivx, 10, RoundingMode.DOWN);
+			if (player.getIVX().compareTo(BigDecimal.ZERO) != 0) {
+				BigDecimal time = right.subtract(player.getRight()).divide(player.getIVX(), 10, RoundingMode.DOWN);
 				
 				if (time.compareTo(collision.time) <= 0) {
 					collision.quad = this;
 					
-					collision.px = right.subtract(player.hWidth);
-					collision.py = player.y.add(player.ivy.multiply(time));
+					collision.px = right.subtract(player.getHWidth());
+					collision.py = player.getY().add(player.getIVY().multiply(time));
 					
 					collision.time = time;
 					
@@ -63,38 +80,38 @@ public class Boundary extends Quad {
 			}
 		}
 		
-		if (player.bottom.compareTo(bottom) >= 0 && player.ivy.compareTo(BigDecimal.ZERO) < 0) {
+		if (player.getBottom().compareTo(bottom) >= 0 && player.getIVY().compareTo(BigDecimal.ZERO) < 0) {
 			// ix = bottom
-			// ix = player.vy * t + player.bottom
-			// t = (bottom - player.bottom) / player.vy
+			// ix = player.vy * t + player.getBottom()
+			// t = (bottom - player.getBottom()) / player.vy
 			
-			if (player.ivy.compareTo(BigDecimal.ZERO) != 0) {
-				BigDecimal time = bottom.subtract(player.bottom).divide(player.ivy, 10, RoundingMode.DOWN);
+			if (player.getIVY().compareTo(BigDecimal.ZERO) != 0) {
+				BigDecimal time = bottom.subtract(player.getBottom()).divide(player.getIVY(), 10, RoundingMode.DOWN);
 				
 				if (time.compareTo(collision.time) <= 0) {
 					collision.quad = this;
 					
-					collision.px = player.x.add(player.ivx.multiply(time));
-					collision.py = bottom.add(player.hHeight);
+					collision.px = player.getX().add(player.getIVX().multiply(time));
+					collision.py = bottom.add(player.getHHeight());
 					
 					collision.time = time;
 					
 					collision.type = Collision.Type.TOP;
 				}
 			}
-		} else if (top.compareTo(player.top) >= 0 && player.ivy.compareTo(BigDecimal.ZERO) > 0) {
+		} else if (top.compareTo(player.getTop()) >= 0 && player.getIVY().compareTo(BigDecimal.ZERO) > 0) {
 			// ix = top
-			// ix = player.vy * t + player.top
-			// t = (top - player.top) / player.vy
+			// ix = player.vy * t + player.getTop()
+			// t = (top - player.getTop()) / player.vy
 			
-			if (player.ivy.compareTo(BigDecimal.ZERO) != 0) {
-				BigDecimal time = top.subtract(player.top).divide(player.ivy, 10, RoundingMode.DOWN);
+			if (player.getIVY().compareTo(BigDecimal.ZERO) != 0) {
+				BigDecimal time = top.subtract(player.getTop()).divide(player.getIVY(), 10, RoundingMode.DOWN);
 				
 				if (time.compareTo(collision.time) <= 0) {
 					collision.quad = this;
 					
-					collision.px = player.x.add(player.ivx.multiply(time));
-					collision.py = top.subtract(player.hWidth);
+					collision.px = player.getX().add(player.getIVX().multiply(time));
+					collision.py = top.subtract(player.getHHeight());
 					
 					collision.time = time;
 					
@@ -103,4 +120,59 @@ public class Boundary extends Quad {
 			}
 		}
 	}
+	
+	@Override
+	public void resolveCollision(Player player, Collision collision) {
+		switch (collision.type) {
+		case LEFT:
+			if (vx.compareTo(BigDecimal.ZERO) < 0) {
+				collision.ivx = vx;
+			} else {
+				collision.ivx = BigDecimal.ZERO;
+			}
+			
+			collision.vx = BigDecimal.ZERO;
+			collision.vy = player.getVY();
+			
+			break;
+		case RIGHT:
+			if (vx.compareTo(BigDecimal.ZERO) > 0) {
+				collision.ivx = vx;
+			} else {
+				collision.ivx = BigDecimal.ZERO;
+			}
+			
+			collision.vx = BigDecimal.ZERO;
+			collision.vy = player.getVY();
+			break;
+			
+		case BOTTOM:
+			if (vy.compareTo(BigDecimal.ZERO) < 0) {
+				collision.ivy = vy;
+			} else {
+				collision.ivy = BigDecimal.ZERO;
+			}
+			
+			collision.vx = player.getVX();
+			collision.vy = BigDecimal.ZERO;
+			break;
+			
+		case TOP:
+			if (vy.compareTo(BigDecimal.ZERO) > 0) {
+				collision.ivy = vy;
+			} else {
+				collision.ivy = BigDecimal.ZERO;
+			}
+			
+			collision.vx = player.getVX().add(SURFACE_DRAG.multiply(player.getVX()).negate().multiply(cacheDT));
+			collision.vy = BigDecimal.ZERO;
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void updateFrame(Level level, BigDecimal elapsed) {}
 }

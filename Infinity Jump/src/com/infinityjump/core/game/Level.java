@@ -13,38 +13,41 @@ import com.infinityjump.core.api.Input;
 import com.infinityjump.core.api.Input.InputAPI.DragEvent;
 import com.infinityjump.core.game.base.Boundary;
 import com.infinityjump.core.game.base.Player;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Block;
 import com.infinityjump.core.game.base.Target;
-import com.infinityjump.core.game.customizable.BouncyQuad;
-import com.infinityjump.core.game.customizable.DeadlyQuad;
-import com.infinityjump.core.game.customizable.StickyQuad;
-import com.infinityjump.core.game.customizable.TeleportQuad;
+import com.infinityjump.core.game.customizable.BouncyBlock;
+import com.infinityjump.core.game.customizable.DeadlyBlock;
+import com.infinityjump.core.game.customizable.StickyBlock;
+import com.infinityjump.core.game.customizable.TeleportBlock;
+import com.infinityjump.core.graphics.QuadRenderer;
 import com.infinityjump.core.api.Logger;
 
 public final class Level {
-
-	public static final float SCROLL_MARGIN = 0.1f;
 	
 	private static Pattern pBraces = Pattern.compile("[\\[\\]]");
 	private static Pattern pComma = Pattern.compile("\\s*,\\s*");
 	private static Pattern pEquals = Pattern.compile("\\s*=\\s*");
 	
-	private Map<Integer, Quad> initQuads;
+	private Map<Integer, Block> initBlocks;
 	private BigDecimal initPX, initPY;
 	
-	private Map<Integer, Quad> quads;
+	private Map<Integer, Block> blocks;
 	
 	private Player player;
 	private Target target;
 	private Boundary boundary;
 	
-	private float scrollX, scrollY;
+	private Camera camera;
+	
+	private QuadRenderer renderer;
 	
 	private boolean restart;
 	
 	public Level() {
-		initQuads = new HashMap<Integer, Quad>();
-		quads = new HashMap<Integer, Quad>();
+		initBlocks = new HashMap<Integer, Block>();
+		blocks = new HashMap<Integer, Block>();
+		
+		renderer = new QuadRenderer();
 	}
 	
 	public void read(InputStream input) {
@@ -95,30 +98,37 @@ public final class Level {
 						return;
 					}
 					
-					Quad quad = null;
+					BigDecimal dLeft = new BigDecimal(left);
+					BigDecimal dRight = new BigDecimal(right);
+					BigDecimal dBottom = new BigDecimal(bottom);
+					BigDecimal dTop = new BigDecimal(top);
+					
+					Block quad = null;
 					
 					switch (type) {
-					case "normal": quad = new Quad(left, right, bottom, top); break;
-					case "deadly": quad = new DeadlyQuad(left, right, bottom, top); break;
-					case "bouncy": quad = new BouncyQuad(left, right, bottom, top); break;
-					case "sticky": quad = new StickyQuad(left, right, bottom, top); break;
+					case "normal": quad = new Block(dLeft, dRight, dBottom, dTop); break;
+					case "deadly": quad = new DeadlyBlock(dLeft, dRight, dBottom, dTop); break;
+					case "bouncy": quad = new BouncyBlock(dLeft, dRight, dBottom, dTop); break;
+					case "sticky": quad = new StickyBlock(dLeft, dRight, dBottom, dTop); break;
 					case "teleport":
-						TeleportQuad.EjectType eT = TeleportQuad.EjectType.parseType(ejectType);
+						TeleportBlock.EjectType eT = TeleportBlock.EjectType.parseType(ejectType);
 						
 						if (linkID == null || eT == null) {
 							Logger.getAPI().error("Must specify channel and eject-type properties of teleport quad");
 							return;
 						}
 						
-						quad = new TeleportQuad(left, right, bottom, top, linkID, eT);
+						quad = new TeleportBlock(dLeft, dRight, dBottom, dTop, linkID, eT);
 						break;
 					default:
 						Logger.getAPI().error("Quad must define type");
 						return;
 					}
 					
-					this.initQuads.put(id, quad);
-					this.quads.put(id, quad.clone()); // not the same instance
+					Block cloned = quad.clone();
+					
+					this.initBlocks.put(id, quad);
+					this.blocks.put(id, cloned); // not the same instance
 					
 				} else if (line.startsWith("player")) {
 					Float x = null;
@@ -147,7 +157,7 @@ public final class Level {
 					this.initPX = new BigDecimal(x);
 					this.initPY = new BigDecimal(y);
 					
-					this.player = new Player(x, y, size);
+					this.player = new Player(this.initPX, this.initPY, new BigDecimal(size * 0.5f));
 				} else if (line.startsWith("boundary")) {
 					Float left = null;
 					Float right = null;
@@ -175,7 +185,7 @@ public final class Level {
 						return;
 					}
 
-					this.boundary = new Boundary(left, right, bottom, top);
+					this.boundary = new Boundary(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top));
 					
 					boundaryInitialized = true;
 				} else if (line.startsWith("target")) {
@@ -205,7 +215,7 @@ public final class Level {
 						return;
 					}
 
-					this.target = new Target(left, right, bottom, top);
+					this.target = new Target(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top));
 					
 					targetInitialized = true;
 				}
@@ -220,8 +230,14 @@ public final class Level {
 			return;
 		}
 		
-		scrollX = player.getX().floatValue();
-		scrollY = player.getY().floatValue();
+		camera = new Camera(player);
+		
+		renderer.addRenderable(boundary);
+		renderer.addRenderable(target);
+		
+		for (Block block : blocks.values()) renderer.addRenderable(block);
+		
+		renderer.addRenderable(player);
 	}
 	
 	public void restart() {
@@ -229,9 +245,19 @@ public final class Level {
 	}
 	
 	public void reset() {
-		quads.clear();
+		blocks.clear();
+		renderer.clear();
 		
-		initQuads.forEach((id, quad) -> quads.put(id, quad.clone())); // fill quads with initial quads
+		renderer.addRenderable(boundary);
+		renderer.addRenderable(target);
+		
+		initBlocks.forEach((id, quad) -> {
+			Block cloned = quad.clone();
+			blocks.put(id, cloned);
+			renderer.addRenderable(cloned);
+		}); // fill quads with initial quads
+		
+		renderer.addRenderable(player);
 		
 		player.setX(initPX);
 		player.setY(initPY);
@@ -239,8 +265,7 @@ public final class Level {
 		player.setVX(BigDecimal.ZERO);
 		player.setVY(BigDecimal.ZERO);
 		
-		scrollX = initPX.floatValue();
-		scrollY = initPY.floatValue();
+		camera.reset();
 	}
 	
 	public void update(double dt) {
@@ -265,11 +290,15 @@ public final class Level {
 			}
 		}
 		
-		player.updateStartFrame(this, deltaT);
+		player.update(this, deltaT);
 		
-		for (Quad quad : quads.values()) {
-			quad.updateStartFrame(this, deltaT);
+		if (!target.update(this, deltaT)) return;
+		
+		for (Block block : blocks.values()) {
+			block.update(this, deltaT);
 		}
+		
+		boundary.update(this, deltaT);
 		
 		Collision collision = new Collision();
 		
@@ -291,14 +320,19 @@ public final class Level {
 			
 			collision.type = Collision.Type.NONE;
 			
-			for (Quad quad : quads.values()) {
-				quad.update(player, collision, deltaT);
+			for (Block quad : blocks.values()) {
+				quad.checkCollision(player, collision);
 			}
 			
-			boundary.update(player, collision, deltaT);
+			boundary.checkCollision(player, collision);
 			
 			if (collision.quad != null) {
-				collision.quad.collided(player, collision, deltaT);
+				collision.quad.resolveCollision(player, collision);
+				
+				if (collision.quad instanceof TeleportBlock) {
+					Block linked = ((TeleportBlock)collision.quad).getCacheLinked();
+					camera.requestJump(linked.getX().floatValue(), linked.getY().floatValue());
+				}
 			}
 			
 			if (restart) {
@@ -308,33 +342,13 @@ public final class Level {
 			
 			timeLeft = timeLeft.subtract(collision.time);
 			
-			player.update(player, collision, deltaT);
+			player.resolveCollision(collision);
 			
-			player.updateEndFrame(this, deltaT);
-			
-			for (Quad quad : quads.values())
-				quad.updateEndFrame(this, collision.time);
+			for (Block quad : blocks.values())
+				quad.updateFrame(this, collision.time);
 		}
 		
-		target.update(player, null, deltaT);
-		
-		updateScroll();
-	}
-	
-	private void updateScroll() {
-		if (player.getLeft().floatValue() - scrollX < SCROLL_MARGIN - 1.0f) {
-			scrollX = player.getLeft().floatValue() - (SCROLL_MARGIN - 1.0f);
-			
-		} else if (player.getRight().floatValue() - scrollX > 1.0f - SCROLL_MARGIN) {
-			scrollX = player.getRight().floatValue() - (1.0f - SCROLL_MARGIN);
-		}
-		
-		if (player.getBottom().floatValue() - scrollY < SCROLL_MARGIN - 1.0f) {
-			scrollY = player.getBottom().floatValue() - (SCROLL_MARGIN - 1.0f);
-			
-		} else if (player.getTop().floatValue() - scrollY > 1.0f - SCROLL_MARGIN) {
-			scrollY = player.getTop().floatValue() - (1.0f - SCROLL_MARGIN);
-		}
+		camera.update(dt);
 	}
 	
 	public void render(Theme theme) {
@@ -342,20 +356,7 @@ public final class Level {
 	}
 	
 	public void render(Theme theme, float shiftX, float playerAlpha) {
-		float sScrollX = scrollX + shiftX;
-		
-		Quad.shader.bind();
-		Quad.shader.setAspectRatio(Input.getAPI().getAspectRatio());
-		
-		boundary.render(theme, sScrollX, scrollY);
-		
-		target.render(theme, sScrollX, scrollY);
-		
-		for (Quad quad : quads.values()) {
-			quad.render(theme, sScrollX, scrollY);
-		}
-		
-		player.render(theme, sScrollX, scrollY, playerAlpha);
+		renderer.render(camera, theme, shiftX);
 	}
 	
 	public Player getPlayer() {
@@ -370,15 +371,15 @@ public final class Level {
 		return boundary;
 	}
 	
-	public Map<Integer, Quad> getQuads() {
-		return quads;
+	public Map<Integer, Block> getBlocks() {
+		return blocks;
 	}
 	
 	public float getScrollDistToLeft() {
-		return scrollX - boundary.getLeft().floatValue();
+		return camera.getX() - boundary.getLeft().floatValue();
 	}
 	
 	public float getScrollDistToRight() {
-		return boundary.getRight().floatValue() - scrollX;
+		return boundary.getRight().floatValue() - camera.getX();
 	}
 }

@@ -3,28 +3,35 @@ package com.infinityjump.core.game.customizable;
 import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
+import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.Block;
 
-public class StickyQuad extends Quad {
+public class StickyBlock extends Block {
 
+	/// TODO Move to config files
 	private static final BigDecimal SURFACE_DRAG = new BigDecimal(10.0);
 
 	private boolean playerStuck, leftSide;
 	
-	public StickyQuad(float left, float right, float bottom, float top) {
-		this(new BigDecimal(left), new BigDecimal(right), new BigDecimal(bottom), new BigDecimal(top));
-	}
-	
-	public StickyQuad(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
+	public StickyBlock(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
 		super(left, right, bottom, top);
-		
-		this.type = Type.STICKY;
 	}
 	
 	@Override
-	public void update(Player player, Collision collision, BigDecimal dt) {
+	public Color getColor(Theme theme) {
+		return theme.getStickyQuadColor();
+	}
+	
+	@Override
+	public Type getType() {
+		return Type.STICKY;
+	}
+	
+	@Override
+	public void checkCollision(Player player, Collision collision) {
 		if (playerStuck) {
 			if (leftSide && player.getIVX().compareTo(BigDecimal.ZERO) < 0 || !leftSide && player.getIVX().compareTo(BigDecimal.ZERO) > 0) {
 				playerStuck = false;
@@ -41,17 +48,15 @@ public class StickyQuad extends Quad {
 			}
 		}
 		
-		super.update(player, collision, dt);
+		super.checkCollision(player, collision);
 	}
 
 	@Override
-	public void collided(Player player, Collision collision, BigDecimal dt) {
+	public void resolveCollision(Player player, Collision collision) {
 		switch (collision.type) {
 		case LEFT:
 			collision.ivx = BigDecimal.ZERO;
 			collision.ivy = BigDecimal.ZERO;
-			
-			collision.time = dt; // use up time
 			
 			collision.type = Collision.Type.TOP; // simulate top collision so player can jump
 			
@@ -66,8 +71,6 @@ public class StickyQuad extends Quad {
 		case RIGHT:
 			collision.ivx = BigDecimal.ZERO;
 			collision.ivy = BigDecimal.ZERO;
-			
-			collision.time = dt; // use up time
 			
 			collision.type = Collision.Type.TOP; // simulate top collision so player can jump
 			
@@ -89,7 +92,7 @@ public class StickyQuad extends Quad {
 		case TOP:
 			collision.ivy = BigDecimal.ZERO;
 			
-			collision.vx = player.getVX().multiply(one.subtract(SURFACE_DRAG.multiply(dt)));
+			collision.vx = player.getVX().add(SURFACE_DRAG.multiply(player.getVX()).negate().multiply(cacheDT));
 			collision.vy = BigDecimal.ZERO;
 			break;
 			
@@ -99,12 +102,7 @@ public class StickyQuad extends Quad {
 	}
 	
 	@Override
-	public void render(Theme theme, float scrollX, float scrollY) {
-		render(theme.getStickyQuadColor(), scrollX, scrollY);
-	}
-	
-	@Override
-	public StickyQuad clone() {
-		return new StickyQuad(left.floatValue(), right.floatValue(), bottom.floatValue(), top.floatValue());
+	public StickyBlock clone() {
+		return new StickyBlock(left, right, bottom, top);
 	}
 }

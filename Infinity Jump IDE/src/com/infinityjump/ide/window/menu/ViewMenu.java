@@ -1,6 +1,6 @@
 package com.infinityjump.ide.window.menu;
 
-import com.infinityjump.ide.window.LevelView;
+import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.CustomMenuItem;

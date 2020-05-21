@@ -27,6 +27,7 @@ public class QuadShader extends Shader {
 	private int scaleLocation;
 	private int aspectRatioLocation;
 	private int colorLocation;
+	private int shiftXLocation;
 	
 	public QuadShader() {
 		super(vertexSource, fragmentSource);
@@ -40,6 +41,8 @@ public class QuadShader extends Shader {
 		aspectRatioLocation = getUniformLocation("aspectRatio");
 		
 		colorLocation = getUniformLocation("color");
+		
+		shiftXLocation = getUniformLocation("shiftX");
 	}
 	
 	public void setOffset(float x, float y) {
@@ -56,5 +59,9 @@ public class QuadShader extends Shader {
 	
 	public void setColor(float r, float g, float b, float a) {
 		setUniformVec4(colorLocation, r, g, b, a);
+	}
+	
+	public void setShiftX(float shiftX) {
+		setUniformFloat(shiftXLocation, shiftX);
 	}
 }

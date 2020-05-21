@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.TwoArgFunction;
 
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.Block;
 
 public class SetY extends TwoArgFunction {
 
-	private Quad quad;
+	private Block quad;
 	
-	public SetY(Quad quad) {
+	public SetY(Block quad) {
 		this.quad = quad;
 	}
 	

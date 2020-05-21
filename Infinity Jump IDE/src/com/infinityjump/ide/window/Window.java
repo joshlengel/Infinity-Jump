@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.game.Launcher;
+import com.infinityjump.ide.window.leveleditor.LevelView;
 import com.infinityjump.ide.window.menu.EditMenu;
 import com.infinityjump.ide.window.menu.FileMenu;
 import com.infinityjump.ide.window.menu.TestMenu;

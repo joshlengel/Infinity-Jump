@@ -3,10 +3,10 @@ package com.infinityjump.ide.window.properties;
 import java.math.BigDecimal;
 import java.util.Map.Entry;
 
-import com.infinityjump.core.game.base.Quad;
-import com.infinityjump.core.game.base.Quad.Type;
-import com.infinityjump.core.game.customizable.TeleportQuad;
-import com.infinityjump.ide.window.LevelView;
+import com.infinityjump.core.game.base.Block;
+import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.customizable.TeleportBlock;
+import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -16,20 +16,20 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class QuadProperties extends PropertyPane {
+public class BlockProperties extends PropertyPane {
 
-	private Quad quad;
+	private Block block;
 	private TextField leftField, rightField, bottomField, topField;
 	
-	private TeleportQuadProperties tQuadProps;
+	private TeleportBlockProperties tBlockProps;
 	
-	public QuadProperties(Entry<Integer, Quad> entry, LevelView view) {
-		this.quad = entry.getValue();
+	public BlockProperties(Entry<Integer, Block> entry, LevelView view) {
+		this.block = entry.getValue();
 		
 		VBox properties = new VBox();
 		
 		TitledPane edgesProperty = new TitledPane();
-		edgesProperty.setText("Quad properties");
+		edgesProperty.setText("Block properties");
 		
 		GridPane edges = new GridPane();
 		edges.setHgap(5.0d);
@@ -59,7 +59,7 @@ public class QuadProperties extends PropertyPane {
 		
 		ComboBox<String> typeField = new ComboBox<String>();
 
-		for (Quad.Type type : Quad.Type.values()) {
+		for (Type type : Type.values()) {
 			typeField.getItems().add(type.toString());
 		}
 		
@@ -77,53 +77,53 @@ public class QuadProperties extends PropertyPane {
 		
 		leftDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				quad.setLeft(new BigDecimal(n.floatValue()));
+				block.setLeft(new BigDecimal(n.floatValue()));
 				view.repaint();
 			}
 		});
 		
 		rightDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				quad.setRight(new BigDecimal(n.floatValue()));
+				block.setRight(new BigDecimal(n.floatValue()));
 				view.repaint();
 			}
 		});
 		
 		bottomDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				quad.setBottom(new BigDecimal(n.floatValue()));
+				block.setBottom(new BigDecimal(n.floatValue()));
 				view.repaint();
 			}
 		});
 		
 		topDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				quad.setTop(new BigDecimal(n.floatValue()));
+				block.setTop(new BigDecimal(n.floatValue()));
 				view.repaint();
 			}
 		});
 		
-		typeField.setValue(quad.getType().toString());
+		typeField.setValue(block.getType().toString());
 		
 		typeField.valueProperty().addListener((ov, o, n) -> {
 			Type type = Type.parseType(n);
 			
-			quad.setType(type);
+			block = view.setNewBlockType(entry.getKey(), type);
 			
 			if (type == Type.TELEPORT) {
-				TeleportQuad tQuad = (TeleportQuad)view.setNewQuadType(entry.getKey(), Type.TELEPORT);
-				tQuadProps = new TeleportQuadProperties(tQuad, properties, view);
+				TeleportBlock tBlock = (TeleportBlock)block;
+				tBlockProps = new TeleportBlockProperties(tBlock, properties, view);
 			} else {
-				properties.getChildren().remove(tQuadProps);
+				properties.getChildren().remove(tBlockProps);
 			}
 			
 			view.repaint();
 		});
 		
-		leftField.setText(Float.toString(quad.getLeft().floatValue()));
-		rightField.setText(Float.toString(quad.getRight().floatValue()));
-		bottomField.setText(Float.toString(quad.getBottom().floatValue()));
-		topField.setText(Float.toString(quad.getTop().floatValue()));
+		leftField.setText(Float.toString(block.getLeft().floatValue()));
+		rightField.setText(Float.toString(block.getRight().floatValue()));
+		bottomField.setText(Float.toString(block.getBottom().floatValue()));
+		topField.setText(Float.toString(block.getTop().floatValue()));
 		
 		edgesProperty.setContent(edges);
 		
@@ -133,16 +133,16 @@ public class QuadProperties extends PropertyPane {
 		Button remove = new Button("Remove");
 		
 		remove.setOnAction(e -> {
-			view.removeCurrentQuad(entry);
+			view.removeCurrentBlock(entry);
 		});
 		
 		miscProperty.setContent(remove);
 		
 		properties.getChildren().addAll(edgesProperty, miscProperty);
 		
-		if (quad.getType() == Type.TELEPORT) {
-			tQuadProps = new TeleportQuadProperties((TeleportQuad)quad, properties, view);
-			properties.getChildren().add(tQuadProps);
+		if (block.getType() == Type.TELEPORT) {
+			tBlockProps = new TeleportBlockProperties((TeleportBlock)block, properties, view);
+			properties.getChildren().add(tBlockProps);
 		}
 		
 		super.getChildren().add(properties);
@@ -150,9 +150,9 @@ public class QuadProperties extends PropertyPane {
 
 	@Override
 	public void update() {
-		leftField.setText(Float.toString(quad.getLeft().floatValue()));
-		rightField.setText(Float.toString(quad.getRight().floatValue()));
-		bottomField.setText(Float.toString(quad.getBottom().floatValue()));
-		topField.setText(Float.toString(quad.getTop().floatValue()));
+		leftField.setText(Float.toString(block.getLeft().floatValue()));
+		rightField.setText(Float.toString(block.getRight().floatValue()));
+		bottomField.setText(Float.toString(block.getBottom().floatValue()));
+		topField.setText(Float.toString(block.getTop().floatValue()));
 	}
 }

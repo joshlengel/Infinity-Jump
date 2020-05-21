@@ -1,7 +1,7 @@
 package com.infinityjump.ide;
 
 import com.infinityjump.core.game.base.Boundary;
-import com.infinityjump.core.game.base.Quad;
+import com.infinityjump.core.game.base.quad.QuadShape;
 
 public class Utils {
 
@@ -21,17 +21,17 @@ public class Utils {
 		return value < low? low : value > high? high : value;
 	}
 	
-	public static boolean pressed(Quad quad, double mouseX, double mouseY) {
-		return quad.getLeft().floatValue() <= mouseX
-				&& quad.getRight().floatValue() >= mouseX
-				&& quad.getBottom().floatValue() <= mouseY
-				&& quad.getTop().floatValue() >= mouseY;
+	public static boolean pressed(QuadShape quad, double mouseX, double mouseY) {
+		return quad.getLeft().doubleValue() <= mouseX
+				&& quad.getRight().doubleValue() >= mouseX
+				&& quad.getBottom().doubleValue() <= mouseY
+				&& quad.getTop().doubleValue() >= mouseY;
 	}
 	
 	public static boolean boundaryPressed(Boundary boundary, double mouseX, double mouseY) {
-		return boundary.getLeft().floatValue() > mouseX
-				|| boundary.getRight().floatValue() < mouseX
-				|| boundary.getBottom().floatValue() > mouseY
-				|| boundary.getTop().floatValue() < mouseY;
+		return boundary.getLeft().doubleValue() > mouseX
+				|| boundary.getRight().doubleValue() < mouseX
+				|| boundary.getBottom().doubleValue() > mouseY
+				|| boundary.getTop().doubleValue() < mouseY;
 	}
 }

@@ -6,35 +6,22 @@ import com.infinityjump.core.game.Collision;
 import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.base.quad.QuadRenderable;
+import com.infinityjump.core.game.base.quad.QuadShapeImpl;
 import com.infinityjump.core.game.sound.Sounds;
 
-public class Player extends Quad {
+public class Player extends QuadShapeImpl implements QuadRenderable {
 
-	public static final BigDecimal AIR_DRAG = new BigDecimal(3.0);
-	
+	/// TODO Move to config files
+	private static final BigDecimal AIR_DRAG = new BigDecimal(3.0);
 	private static final BigDecimal gravity = new BigDecimal(-9.81);
 	
 	protected boolean jumping;
 	
-	protected BigDecimal hWidth, hHeight;
 	protected BigDecimal ivx, ivy;
 	
-	public Player(float x, float y, float size) {
-		super(0.0f, 0.0f, 0.0f, 0.0f);
-		
-		this.x = new BigDecimal(x);
-		this.y = new BigDecimal(y);
-		
-		this.width = new BigDecimal(size);
-		this.height = new BigDecimal(size);
-		
-		this.hWidth = width.multiply(point5);
-		this.hHeight = height.multiply(point5);
-		
-		this.left = this.x.subtract(hWidth);
-		this.right = this.x.add(hWidth);
-		this.bottom = this.y.subtract(hHeight);
-		this.top = this.y.add(hHeight);
+	public Player(BigDecimal x, BigDecimal y, BigDecimal hSize) {
+		super(x.subtract(hSize), x.add(hSize), y.subtract(hSize), y.add(hSize));
 		
 		this.ivx = BigDecimal.ZERO;
 		this.ivy = BigDecimal.ZERO;
@@ -42,25 +29,21 @@ public class Player extends Quad {
 		this.jumping = true;
 	}
 	
-	public void render(Theme theme, float scrollX, float scrollY, float alpha) {
-		Color playerColor = theme.getPlayerColor();
-		Color nPlayerColor = new Color(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), playerColor.getAlpha() * alpha);
-		
-		render(nPlayerColor, scrollX, scrollY);
-	}
-
 	@Override
-	public void render(Theme theme, float scrollX, float scrollY) {
-		render(theme.getPlayerColor(), scrollX, scrollY);
+	public Color getColor(Theme theme) {
+		return theme.getPlayerColor();
 	}
 	
 	@Override
-	public void updateStartFrame(Level level, BigDecimal dt) {
+	public Type getType() {
+		return Type.PLAYER;
+	}
+	
+	public void update(Level level, BigDecimal dt) {
 		vy = vy.add(dt.multiply(gravity));
 	}
 	
-	@Override
-	public void update(Player player, Collision collision, BigDecimal dt) {
+	public void resolveCollision(Collision collision) {
 		if (collision.type == Collision.Type.NONE) {
 			BigDecimal dx = ivx.multiply(collision.time);
 			BigDecimal dy = ivy.multiply(collision.time);
@@ -85,7 +68,7 @@ public class Player extends Quad {
 		if (collision.type == Collision.Type.TOP) {
 			jumping = false;
 		} else if (jumping) {
-			BigDecimal airDragEffect = one.subtract(AIR_DRAG.multiply(collision.time));
+			BigDecimal airDragEffect = BigDecimal.ONE.subtract(AIR_DRAG.multiply(collision.time));
 			collision.vx = collision.vx.multiply(airDragEffect);
 			collision.vy = collision.vy.multiply(airDragEffect);
 		}
@@ -93,9 +76,6 @@ public class Player extends Quad {
 		vx = collision.vx;
 		vy = collision.vy;
 	}
-	
-	@Override
-	public void updateEndFrame(Level level, BigDecimal dt) {}
 	
 	public void boostX(BigDecimal speed) {
 		this.vx = speed;
@@ -111,74 +91,13 @@ public class Player extends Quad {
 		}
 	}
 	
-	public BigDecimal getHWidth() {
-		return hWidth;
+	public void setSize(BigDecimal size) {
+		super.setWidth(size);
+		super.setHeight(size);
 	}
 	
-	public BigDecimal getHHeight() {
-		return hHeight;
-	}
-	
-	@Override
-	public void setX(BigDecimal x) {
-		this.x = x;
-		
-		this.left = this.x.subtract(hWidth);
-		this.right = this.x.add(hWidth);
-	}
-	
-	@Override
-	public void setY(BigDecimal y) {
-		this.y = y;
-		
-		this.bottom = this.y.subtract(hHeight);
-		this.top = this.y.add(hHeight);
-	}
-	
-	@Override
-	public void setWidth(BigDecimal width) {
-		this.width = width;
-		this.hWidth = width.multiply(point5);
-		
-		this.left = this.x.subtract(hWidth);
-		this.right = this.x.add(hWidth);
-	}
-	
-	@Override
-	public void setHeight(BigDecimal height) {
-		this.height = height;
-		this.hHeight = height.multiply(point5);
-		
-		this.bottom = this.y.subtract(hHeight);
-		this.top = this.y.add(hHeight);
-	}
-	
-	@Override
-	public void setLeft(BigDecimal left) {
-		super.setLeft(left);
-		
-		hWidth = width.multiply(point5);
-	}
-	
-	@Override
-	public void setRight(BigDecimal right) {
-		super.setRight(right);
-		
-		hWidth = width.multiply(point5);
-	}
-	
-	@Override
-	public void setBottom(BigDecimal bottom) {
-		super.setBottom(bottom);
-		
-		hHeight = height.multiply(point5);
-	}
-	
-	@Override
-	public void setTop(BigDecimal top) {
-		super.setTop(top);
-		
-		hHeight = height.multiply(point5);
+	public BigDecimal getSize() {
+		return super.getWidth();
 	}
 	
 	public void setIVX(BigDecimal ivx) {
