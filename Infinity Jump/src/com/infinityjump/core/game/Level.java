@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.infinityjump.core.api.Input;
 import com.infinityjump.core.api.Input.InputAPI.DragEvent;
@@ -20,13 +19,10 @@ import com.infinityjump.core.game.customizable.DeadlyBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.graphics.QuadRenderer;
+import com.infinityjump.core.utils.Patterns;
 import com.infinityjump.core.api.Logger;
 
 public final class Level {
-	
-	private static Pattern pBraces = Pattern.compile("[\\[\\]]");
-	private static Pattern pComma = Pattern.compile("\\s*,\\s*");
-	private static Pattern pEquals = Pattern.compile("\\s*=\\s*");
 	
 	private Map<Integer, Block> initBlocks;
 	private BigDecimal initPX, initPY;
@@ -69,10 +65,10 @@ public final class Level {
 					Integer linkID = null; // only for teleportation
 					String ejectType = null; // only for teleportation
 					
-					String[] args = pComma.split(pBraces.split(line)[1]);
+					String[] args = Patterns.commaWithSpaces.split(Patterns.braces.split(line)[1]);
 					
 					for(String arg : args) {
-						String[] pair = pEquals.split(arg);
+						String[] pair = Patterns.equals.split(arg);
 						
 						if (pair[0].contentEquals("id")) {
 							id = Integer.parseInt(pair[1]);
@@ -135,10 +131,10 @@ public final class Level {
 					Float y = null;
 					Float size = null;
 					
-					String[] args = pComma.split(pBraces.split(line)[1]);
+					String[] args = Patterns.commaWithSpaces.split(Patterns.braces.split(line)[1]);
 					
 					for(String arg : args) {
-						String[] pair = pEquals.split(arg);
+						String[] pair = Patterns.equals.split(arg);
 						
 						if (pair[0].contentEquals("x")) {
 							x = Float.parseFloat(pair[1]);
@@ -164,10 +160,10 @@ public final class Level {
 					Float bottom = null;
 					Float top = null;
 					
-					String[] args = pComma.split(pBraces.split(line)[1]);
+					String[] args = Patterns.commaWithSpaces.split(Patterns.braces.split(line)[1]);
 					
 					for(String arg : args) {
-						String[] pair = pEquals.split(arg);
+						String[] pair = Patterns.equals.split(arg);
 						
 						if (pair[0].contentEquals("left")) {
 							left = Float.parseFloat(pair[1]);
@@ -194,10 +190,10 @@ public final class Level {
 					Float bottom = null;
 					Float top = null;
 					
-					String[] args = pComma.split(pBraces.split(line)[1]);
+					String[] args = Patterns.commaWithSpaces.split(Patterns.braces.split(line)[1]);
 					
 					for(String arg : args) {
-						String[] pair = pEquals.split(arg);
+						String[] pair = Patterns.equals.split(arg);
 						
 						if (pair[0].contentEquals("left")) {
 							left = Float.parseFloat(pair[1]);
@@ -268,7 +264,7 @@ public final class Level {
 		camera.reset();
 	}
 	
-	public void update(double dt) {
+	public void update(Theme theme, double dt) {
 		BigDecimal deltaT = new BigDecimal(dt);
 		
 		DragEvent dragEvent = Input.getAPI().getDragEvent();
@@ -290,15 +286,15 @@ public final class Level {
 			}
 		}
 		
-		player.update(this, deltaT);
+		player.update(this, theme, deltaT);
 		
-		if (!target.update(this, deltaT)) return;
+		if (!target.update(this, theme, deltaT)) return;
 		
 		for (Block block : blocks.values()) {
-			block.update(this, deltaT);
+			block.update(this, theme, deltaT);
 		}
 		
-		boundary.update(this, deltaT);
+		boundary.update(this, theme, deltaT);
 		
 		Collision collision = new Collision();
 		

@@ -8,6 +8,7 @@ import com.infinityjump.core.api.OpenGL.OpenGLAPI;
 import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.properties.BlockProperties;
 
 public class TransitionState implements State {
 
@@ -53,11 +54,11 @@ public class TransitionState implements State {
 
 	@Override
 	public void render() {
-		Color boundaryColor = theme.getDefaultQuadColor();
+		Color boundaryColor = ((BlockProperties)theme.getProperties("normal")).color;
 		
 		OpenGLAPI api = OpenGL.getAPI();
 		
-		api.clearColor(boundaryColor.getRed(), boundaryColor.getGreen(), boundaryColor.getBlue(), boundaryColor.getAlpha());
+		api.clearColor(boundaryColor.r, boundaryColor.g, boundaryColor.b, boundaryColor.a);
 		api.clear();
 		
 		float shiftX = (float) (timer / TRANSITION_LENGTH * totalShiftDist);

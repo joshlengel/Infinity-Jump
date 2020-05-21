@@ -3,18 +3,15 @@ package com.infinityjump.core.game.base;
 import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
-import com.infinityjump.core.game.base.quad.QuadRenderable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.properties.PlayerProperties;
 import com.infinityjump.core.game.sound.Sounds;
 
-public class Player extends QuadShapeImpl implements QuadRenderable {
+public class Player extends QuadShapeImpl {
 
-	/// TODO Move to config files
-	private static final BigDecimal AIR_DRAG = new BigDecimal(3.0);
-	private static final BigDecimal gravity = new BigDecimal(-9.81);
+	protected BigDecimal cacheAirDrag;
 	
 	protected boolean jumping;
 	
@@ -30,17 +27,16 @@ public class Player extends QuadShapeImpl implements QuadRenderable {
 	}
 	
 	@Override
-	public Color getColor(Theme theme) {
-		return theme.getPlayerColor();
-	}
-	
-	@Override
 	public Type getType() {
 		return Type.PLAYER;
 	}
 	
-	public void update(Level level, BigDecimal dt) {
-		vy = vy.add(dt.multiply(gravity));
+	public void update(Level level, Theme theme, BigDecimal dt) {
+		PlayerProperties props = (PlayerProperties)theme.getProperties("player");
+		
+		cacheAirDrag = props.airDrag;
+		
+		vy = vy.add(dt.multiply(props.gravity));
 	}
 	
 	public void resolveCollision(Collision collision) {
@@ -68,7 +64,7 @@ public class Player extends QuadShapeImpl implements QuadRenderable {
 		if (collision.type == Collision.Type.TOP) {
 			jumping = false;
 		} else if (jumping) {
-			BigDecimal airDragEffect = BigDecimal.ONE.subtract(AIR_DRAG.multiply(collision.time));
+			BigDecimal airDragEffect = BigDecimal.ONE.subtract(cacheAirDrag.multiply(collision.time));
 			collision.vx = collision.vx.multiply(airDragEffect);
 			collision.vy = collision.vy.multiply(airDragEffect);
 		}

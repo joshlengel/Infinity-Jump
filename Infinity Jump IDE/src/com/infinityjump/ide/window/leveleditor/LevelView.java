@@ -13,10 +13,11 @@ import com.infinityjump.core.game.customizable.BouncyBlock;
 import com.infinityjump.core.game.customizable.DeadlyBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
-import com.infinityjump.ide.window.properties.BlockProperties;
-import com.infinityjump.ide.window.properties.BoundaryProperties;
-import com.infinityjump.ide.window.properties.PlayerProperties;
-import com.infinityjump.ide.window.properties.TargetProperties;
+import com.infinityjump.core.game.properties.QuadProperties;
+import com.infinityjump.ide.window.properties.BlockPropertiesPanel;
+import com.infinityjump.ide.window.properties.BoundaryPropertiesPanel;
+import com.infinityjump.ide.window.properties.PlayerPropertiesPanel;
+import com.infinityjump.ide.window.properties.TargetPropertiesPanel;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -133,17 +134,24 @@ public class LevelView extends Pane {
 		double zScrollX = data.scrollX * data.zoom;
 		double zScrollY = data.scrollY * data.zoom;
 		
-		context.setFill(getColor(data.theme.getDefaultQuadColor()));
+		QuadProperties backgroundProps = data.theme.getProperties("background");
+		QuadProperties normalProps = data.theme.getProperties("normal");
+		QuadProperties targetProps = data.theme.getProperties("target");
+		QuadProperties playerProps = data.theme.getProperties("player");
+		
+		context.setFill(getColor(normalProps.color));
 		context.fillRect(0.0d, 0.0d, drawable.getWidth(), drawable.getHeight());
 		
-		drawRect(context, getRect(data.boundary), getColor(data.theme.getBackgroundColor()), zScrollX, zScrollY);
+		drawRect(context, getRect(data.boundary), getColor(backgroundProps.color), zScrollX, zScrollY);
 		
-		drawRect(context, getRect(data.target), getColor(data.theme.getTargetColor()), zScrollX, zScrollY);
+		drawRect(context, getRect(data.target), getColor(targetProps.color), zScrollX, zScrollY);
 		
 		for (Block block : data.blocks.values()) {
 			Rectangle dRect = getRect(block);
 			
-			drawRect(context, dRect, getColor(data.theme.forQuad(block.getType())), zScrollX, zScrollY);
+			QuadProperties props = data.theme.getProperties(block.getType().toString());
+			
+			drawRect(context, dRect, getColor(props.color), zScrollX, zScrollY);
 			
 			if (block instanceof TeleportBlock) {
 				TeleportBlock tBlock = (TeleportBlock)block;
@@ -201,10 +209,10 @@ public class LevelView extends Pane {
 		}
 		
 		if (data.spawningBlock != null) {
-			drawRect(context, getRect(data.spawningBlock), getColor(data.theme.getDefaultQuadColor()), zScrollX, zScrollY);
+			drawRect(context, getRect(data.spawningBlock), getColor(normalProps.color), zScrollX, zScrollY);
 		}
 		
-		drawRect(context, getRect(data.player), getColor(data.theme.getPlayerColor()), zScrollX, zScrollY);
+		drawRect(context, getRect(data.player), getColor(playerProps.color), zScrollX, zScrollY);
 		
 		if (data.highlighted != null) {
 			Rectangle rect = getRect(data.highlighted);
@@ -290,11 +298,11 @@ public class LevelView extends Pane {
 	}
 	
 	private Color getColor(com.infinityjump.core.game.Color color) {
-		return Color.color(color.getRed(), color.getGreen(), color.getBlue());
+		return Color.color(color.r, color.g, color.b);
 	}
 
 	void showBlockProperties(Entry<Integer, Block> block) {
-		BlockProperties props = new BlockProperties(block, this);
+		BlockPropertiesPanel props = new BlockPropertiesPanel(block, this);
 		
 		data.center.getItems().remove(data.lastPropertyPane);
 		data.center.getItems().add(props);
@@ -303,7 +311,7 @@ public class LevelView extends Pane {
 	}
 	
 	void showPlayerProperties() {
-		PlayerProperties props = new PlayerProperties(data.player, this);
+		PlayerPropertiesPanel props = new PlayerPropertiesPanel(data.player, this);
 		
 		data.center.getItems().remove(data.lastPropertyPane);
 		data.center.getItems().add(props);
@@ -312,7 +320,7 @@ public class LevelView extends Pane {
 	}
 	
 	void showTargetProperties() {
-		TargetProperties props = new TargetProperties(data.target, this);
+		TargetPropertiesPanel props = new TargetPropertiesPanel(data.target, this);
 		
 		data.center.getItems().remove(data.lastPropertyPane);
 		data.center.getItems().add(props);
@@ -321,7 +329,7 @@ public class LevelView extends Pane {
 	}
 	
 	void showBoundaryProperties() {
-		BoundaryProperties props = new BoundaryProperties(data.boundary, this);
+		BoundaryPropertiesPanel props = new BoundaryPropertiesPanel(data.boundary, this);
 		
 		data.center.getItems().remove(data.lastPropertyPane);
 		data.center.getItems().add(props);

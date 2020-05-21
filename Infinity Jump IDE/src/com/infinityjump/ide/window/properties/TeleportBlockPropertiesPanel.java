@@ -11,12 +11,12 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class TeleportBlockProperties extends PropertyPane {
+public class TeleportBlockPropertiesPanel extends PropertyPanel {
 
 	private TeleportBlock block;
 	private TextField linkIDField;
 	
-	public TeleportBlockProperties(TeleportBlock block, VBox parent, LevelView view) {
+	public TeleportBlockPropertiesPanel(TeleportBlock block, VBox parent, LevelView view) {
 		this.block = block;
 		
 		TitledPane channelProperty = new TitledPane();

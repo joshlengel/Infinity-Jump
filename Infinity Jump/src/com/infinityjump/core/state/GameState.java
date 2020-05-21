@@ -8,6 +8,7 @@ import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.LevelStream;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.sound.Sounds;
 import com.infinityjump.core.graphics.GraphicsAssets;
 import com.infinityjump.core.script.Script;
@@ -41,8 +42,8 @@ public class GameState implements State {
 
 	@Override
 	public void update(double dt) {
-		script.update(dt, level);
-		level.update(dt);
+		script.update(level, dt);
+		level.update(theme, dt);
 	}
 
 	@Override
@@ -50,11 +51,11 @@ public class GameState implements State {
 
 	@Override
 	public void render() {
-		Color boundaryColor = theme.getDefaultQuadColor();
+		Color boundaryColor = ((BlockProperties)theme.getProperties("normal")).color;
 		
 		OpenGLAPI api = OpenGL.getAPI();
 		
-		api.clearColor(boundaryColor.getRed(), boundaryColor.getGreen(), boundaryColor.getBlue(), boundaryColor.getAlpha());
+		api.clearColor(boundaryColor.r, boundaryColor.g, boundaryColor.b, boundaryColor.a);
 		api.clear();
 		
 		level.render(theme);

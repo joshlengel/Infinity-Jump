@@ -2,18 +2,15 @@ package com.infinityjump.core.game.base;
 
 import java.math.BigDecimal;
 
-import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
-import com.infinityjump.core.game.base.quad.QuadRenderable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.properties.TargetProperties;
 import com.infinityjump.core.state.GameState;
 import com.infinityjump.core.state.StateMachine;
 
-public class Target extends QuadShapeImpl implements QuadRenderable {
+public class Target extends QuadShapeImpl {
 
-	public static final double REQUIRED_FINISH_TIME = 1.0;
-	
 	private double timer;
 	
 	public Target(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
@@ -21,16 +18,11 @@ public class Target extends QuadShapeImpl implements QuadRenderable {
 	}
 
 	@Override
-	public Color getColor(Theme theme) {
-		return theme.getTargetColor();
-	}
-	
-	@Override
 	public Type getType() {
 		return Type.TARGET;
 	}
 	
-	public boolean update(Level level, BigDecimal dt) {
+	public boolean update(Level level, Theme theme, BigDecimal dt) {
 		// no collision detection
 		
 		Player player = level.getPlayer();
@@ -41,7 +33,7 @@ public class Target extends QuadShapeImpl implements QuadRenderable {
 				&& player.getTop().compareTo(top) <= 0) {
 			timer += dt.doubleValue();
 			
-			if (timer >= REQUIRED_FINISH_TIME) {
+			if (timer >= ((TargetProperties)theme.getProperties("target")).requiredFinishTime) {
 				((GameState)StateMachine.machine.getCurrentState()).changeState();
 				return false;
 			}

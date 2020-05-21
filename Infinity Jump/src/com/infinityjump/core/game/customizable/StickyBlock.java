@@ -3,26 +3,16 @@ package com.infinityjump.core.game.customizable;
 import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Color;
-import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.Type;
 import com.infinityjump.core.game.base.Block;
 
 public class StickyBlock extends Block {
 
-	/// TODO Move to config files
-	private static final BigDecimal SURFACE_DRAG = new BigDecimal(10.0);
-
 	private boolean playerStuck, leftSide;
 	
 	public StickyBlock(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
 		super(left, right, bottom, top);
-	}
-	
-	@Override
-	public Color getColor(Theme theme) {
-		return theme.getStickyQuadColor();
 	}
 	
 	@Override
@@ -39,7 +29,7 @@ public class StickyBlock extends Block {
 			} else {
 				collision.quad = this;
 				
-				collision.time = BigDecimal.ZERO; // min time
+				collision.time = cacheDT; // min time
 				
 				collision.px = player.getX();
 				collision.py = player.getY();
@@ -92,7 +82,7 @@ public class StickyBlock extends Block {
 		case TOP:
 			collision.ivy = BigDecimal.ZERO;
 			
-			collision.vx = player.getVX().add(SURFACE_DRAG.multiply(player.getVX()).negate().multiply(cacheDT));
+			collision.vx = player.getVX().add(cacheSurfaceDrag.multiply(player.getVX()).negate().multiply(cacheDT));
 			collision.vy = BigDecimal.ZERO;
 			break;
 			

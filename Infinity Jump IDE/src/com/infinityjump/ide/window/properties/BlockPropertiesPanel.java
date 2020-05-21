@@ -16,14 +16,14 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class BlockProperties extends PropertyPane {
+public class BlockPropertiesPanel extends PropertyPanel {
 
 	private Block block;
 	private TextField leftField, rightField, bottomField, topField;
 	
-	private TeleportBlockProperties tBlockProps;
+	private TeleportBlockPropertiesPanel tBlockProps;
 	
-	public BlockProperties(Entry<Integer, Block> entry, LevelView view) {
+	public BlockPropertiesPanel(Entry<Integer, Block> entry, LevelView view) {
 		this.block = entry.getValue();
 		
 		VBox properties = new VBox();
@@ -112,7 +112,7 @@ public class BlockProperties extends PropertyPane {
 			
 			if (type == Type.TELEPORT) {
 				TeleportBlock tBlock = (TeleportBlock)block;
-				tBlockProps = new TeleportBlockProperties(tBlock, properties, view);
+				tBlockProps = new TeleportBlockPropertiesPanel(tBlock, properties, view);
 			} else {
 				properties.getChildren().remove(tBlockProps);
 			}
@@ -141,7 +141,7 @@ public class BlockProperties extends PropertyPane {
 		properties.getChildren().addAll(edgesProperty, miscProperty);
 		
 		if (block.getType() == Type.TELEPORT) {
-			tBlockProps = new TeleportBlockProperties((TeleportBlock)block, properties, view);
+			tBlockProps = new TeleportBlockPropertiesPanel((TeleportBlock)block, properties, view);
 			properties.getChildren().add(tBlockProps);
 		}
 		

@@ -10,12 +10,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 
-public class PlayerProperties extends PropertyPane {
+public class PlayerPropertiesPanel extends PropertyPanel {
 
 	private Player player;
 	private TextField xField, yField, sizeField;
 	
-	public PlayerProperties(Player player, LevelView view) {
+	public PlayerPropertiesPanel(Player player, LevelView view) {
 		this.player = player;
 		
 		TitledPane edgesProperty = new TitledPane();

@@ -2,7 +2,7 @@ package com.infinityjump.ide.window.properties;
 
 import java.math.BigDecimal;
 
-import com.infinityjump.core.game.base.Target;
+import com.infinityjump.core.game.base.Boundary;
 import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.scene.control.Label;
@@ -10,16 +10,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 
-public class TargetProperties extends PropertyPane {
-
-	private Target target;
-	private TextField leftField, rightField, bottomField, topField;
+public class BoundaryPropertiesPanel extends PropertyPanel {
 	
-	public TargetProperties(Target target, LevelView view) {
-		this.target = target;
+	private Boundary boundary;
+	private TextField leftField, rightField, bottomField, topField;
+
+	public BoundaryPropertiesPanel(Boundary boundary, LevelView view) {
+		this.boundary = boundary;
 		
 		TitledPane edgesProperty = new TitledPane();
-		edgesProperty.setText("Target properties");
+		edgesProperty.setText("Boundary properties");
 		
 		GridPane edges = new GridPane();
 		edges.setHgap(5.0d);
@@ -52,36 +52,36 @@ public class TargetProperties extends PropertyPane {
 		
 		leftDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				target.setLeft(new BigDecimal(n.floatValue()));
+				boundary.setLeft(new BigDecimal(n));
 				view.repaint();
 			}
 		});
 		
 		rightDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				target.setRight(new BigDecimal(n.floatValue()));
+				boundary.setRight(new BigDecimal(n));
 				view.repaint();
 			}
 		});
 		
 		bottomDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				target.setBottom(new BigDecimal(n.floatValue()));
+				boundary.setBottom(new BigDecimal(n));
 				view.repaint();
 			}
 		});
 		
 		topDF.valueProperty().addListener((ov, o, n) -> {
 			if (n != null) {
-				target.setTop(new BigDecimal(n.floatValue()));
+				boundary.setTop(new BigDecimal(n));
 				view.repaint();
 			}
 		});
 		
-		leftField.setText(Float.toString(target.getLeft().floatValue()));
-		rightField.setText(Float.toString(target.getRight().floatValue()));
-		bottomField.setText(Float.toString(target.getBottom().floatValue()));
-		topField.setText(Float.toString(target.getTop().floatValue()));
+		leftField.setText(Float.toString(boundary.getLeft().floatValue()));
+		rightField.setText(Float.toString(boundary.getRight().floatValue()));
+		bottomField.setText(Float.toString(boundary.getBottom().floatValue()));
+		topField.setText(Float.toString(boundary.getTop().floatValue()));
 		
 		edgesProperty.setContent(edges);
 		
@@ -90,9 +90,9 @@ public class TargetProperties extends PropertyPane {
 
 	@Override
 	public void update() {
-		leftField.setText(Float.toString(target.getLeft().floatValue()));
-		rightField.setText(Float.toString(target.getRight().floatValue()));
-		bottomField.setText(Float.toString(target.getBottom().floatValue()));
-		topField.setText(Float.toString(target.getTop().floatValue()));
+		leftField.setText(Float.toString(boundary.getLeft().floatValue()));
+		rightField.setText(Float.toString(boundary.getRight().floatValue()));
+		bottomField.setText(Float.toString(boundary.getBottom().floatValue()));
+		topField.setText(Float.toString(boundary.getTop().floatValue()));
 	}
 }

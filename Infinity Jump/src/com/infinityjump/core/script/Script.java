@@ -116,7 +116,7 @@ public class Script {
 		}
 	}
 	
-	public void update(double dt, Level level) {
+	public void update(Level level, double dt) {
 		try {
 			// get new quads
 			for (Entry<Integer, Block> entry : level.getBlocks().entrySet()) {

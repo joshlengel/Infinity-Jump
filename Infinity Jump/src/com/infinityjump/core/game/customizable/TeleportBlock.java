@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.api.Logger;
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
@@ -54,17 +53,12 @@ public class TeleportBlock extends Block {
 	}
 	
 	@Override
-	public Color getColor(Theme theme) {
-		return theme.getTeleportQuadColor();
-	}
-	
-	@Override
 	public Type getType() {
 		return Type.TELEPORT;
 	}
 
 	@Override
-	public void update(Level level, BigDecimal dt) {
+	public void update(Level level, Theme theme, BigDecimal dt) {
 		this.cacheLinked = null;
 		
 		level.getBlocks().forEach((id, block) -> {

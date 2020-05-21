@@ -11,7 +11,7 @@ import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.Target;
 import com.infinityjump.core.game.base.quad.QuadShape;
 import com.infinityjump.core.game.customizable.TeleportBlock;
-import com.infinityjump.ide.window.properties.PropertyPane;
+import com.infinityjump.ide.window.properties.PropertyPanel;
 
 import javafx.scene.control.SplitPane;
 
@@ -59,7 +59,7 @@ public class LevelData {
 	public boolean scrolling;
 	public double zoom = 1.0;
 	
-	public PropertyPane lastPropertyPane;
+	public PropertyPanel lastPropertyPane;
 	
 	public SplitPane center;
 	

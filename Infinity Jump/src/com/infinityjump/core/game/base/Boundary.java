@@ -4,27 +4,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.base.quad.QuadCollidable;
-import com.infinityjump.core.game.base.quad.QuadRenderable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
 
-public class Boundary extends QuadShapeImpl implements QuadRenderable, QuadCollidable {
+public class Boundary extends QuadShapeImpl implements QuadCollidable {
 
-	/// TODO Move to config files
-	private static final BigDecimal SURFACE_DRAG = new BigDecimal(5.0);
-	
 	private BigDecimal cacheDT;
+	private BigDecimal cacheSurfaceDrag;
 	
 	public Boundary(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
 		super(left, right, bottom, top);
-	}
-	
-	@Override
-	public Color getColor(Theme theme) {
-		return theme.getBackgroundColor();
 	}
 	
 	@Override
@@ -33,8 +25,9 @@ public class Boundary extends QuadShapeImpl implements QuadRenderable, QuadColli
 	}
 
 	@Override
-	public void update(Level level, BigDecimal dt) {
+	public void update(Level level, Theme theme, BigDecimal dt) {
 		cacheDT = dt;
+		cacheSurfaceDrag = ((BlockProperties)theme.getProperties("normal")).surfaceDrag;
 	}
 	
 	@Override
@@ -164,7 +157,7 @@ public class Boundary extends QuadShapeImpl implements QuadRenderable, QuadColli
 				collision.ivy = BigDecimal.ZERO;
 			}
 			
-			collision.vx = player.getVX().add(SURFACE_DRAG.multiply(player.getVX()).negate().multiply(cacheDT));
+			collision.vx = player.getVX().add(cacheSurfaceDrag.multiply(player.getVX()).negate().multiply(cacheDT));
 			collision.vy = BigDecimal.ZERO;
 			break;
 			

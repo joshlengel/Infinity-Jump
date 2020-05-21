@@ -3,27 +3,25 @@ package com.infinityjump.core.game.base;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.base.quad.QuadCollidable;
-import com.infinityjump.core.game.base.quad.QuadRenderable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
 
-public class Block extends QuadShapeImpl implements QuadRenderable, QuadCollidable {
-	
-	/// TODO Move to config files
-	private static final BigDecimal SURFACE_DRAG = new BigDecimal(5.0);
+public class Block extends QuadShapeImpl implements QuadCollidable {
 	
 	protected BigDecimal cacheDT;
+	protected BigDecimal cacheSurfaceDrag;
 	
 	public Block(BigDecimal left, BigDecimal right, BigDecimal bottom, BigDecimal top) {
 		super(left, right, bottom, top);
 	}
 	
 	@Override
-	public void update(Level level, BigDecimal dt) {
+	public void update(Level level, Theme theme, BigDecimal dt) {
 		cacheDT = dt;
+		cacheSurfaceDrag = ((BlockProperties)theme.getProperties("normal")).surfaceDrag;
 	}
 	
 	@Override
@@ -217,18 +215,13 @@ public class Block extends QuadShapeImpl implements QuadRenderable, QuadCollidab
 				collision.ivy = BigDecimal.ZERO;
 			}
 			
-			collision.vx = player.getVX().add(SURFACE_DRAG.multiply(player.getVX()).negate().multiply(cacheDT));
+			collision.vx = player.getVX().add(cacheSurfaceDrag.multiply(player.getVX()).negate().multiply(cacheDT));
 			collision.vy = BigDecimal.ZERO;
 			break;
 			
 		default:
 			break;
 		}
-	}
-	
-	@Override
-	public Color getColor(Theme theme) {
-		return theme.getDefaultQuadColor();
 	}
 	
 	@Override
