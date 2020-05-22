@@ -3,18 +3,18 @@
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="" name="Infinity Jump v2.0">
+              as the first entry and export the buildfile again. --><project basedir="." default="" name="Infinity Jump">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
     
-    <path id="Infinity Jump v2.0.classpath">
+    <path id="Infinity Jump.classpath">
         <pathelement location="bin"/>
     	<pathelement location="lib/lua/luaj-jse-3.0.1.jar"/>
     </path>
     
-    <path id="jar.Infinity Jump v2.0.classpath">
+    <path id="jar.Infinity Jump.classpath">
     	<pathelement location="dist/lib/lua/luaj-jse-3.0.1.jar"/>
     </path>
               	
@@ -31,24 +31,18 @@
     <target name="clean">
         <delete dir="bin"/>
     </target>
-              	
-    <target depends="clean" name="cleanall"/>
-              	
-    <target depends="build-subprojects,build-project" name="build"/>
-              	
-    <target name="build-subprojects"/>
-              	
-    <target depends="init" name="build-project">
+    
+    <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="Infinity Jump v2.0.classpath"/>
+            <classpath refid="Infinity Jump.classpath"/>
         </javac>
     </target>
     
     <target name="export" depends="clean, build">
     	<manifestclasspath property="manifest.path" jarfile="dist/lib/Infinity Jump/Infinity Jump.jar" maxParentLevels="4">
-			<classpath refid="jar.Infinity Jump v2.0.classpath"/>
+			<classpath refid="jar.Infinity Jump.classpath"/>
 		</manifestclasspath>
     	<jar basedir="bin" destfile="dist/lib/Infinity Jump/Infinity Jump.jar">
     		<manifest>

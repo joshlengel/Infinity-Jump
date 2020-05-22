@@ -54,6 +54,8 @@ public class Theme {
 			
 			p.evaluate(keyPart2, value);
 		}
+		
+		properties.put("boundary", properties.get("normal"));
 	}
 	
 	public QuadProperties getProperties(String name) {

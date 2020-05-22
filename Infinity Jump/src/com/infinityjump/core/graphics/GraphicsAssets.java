@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.infinityjump.core.api.Logger;
+import com.infinityjump.core.graphics.quads.QuadShader;
 import com.infinityjump.core.state.StateMachine;
 
 public class GraphicsAssets {

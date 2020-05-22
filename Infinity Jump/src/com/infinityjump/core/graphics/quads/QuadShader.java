@@ -1,9 +1,10 @@
-package com.infinityjump.core.graphics;
+package com.infinityjump.core.graphics.quads;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import com.infinityjump.core.api.Logger;
+import com.infinityjump.core.graphics.Shader;
 
 public class QuadShader extends Shader {
 

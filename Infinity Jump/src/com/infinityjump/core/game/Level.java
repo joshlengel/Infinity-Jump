@@ -18,7 +18,8 @@ import com.infinityjump.core.game.customizable.BouncyBlock;
 import com.infinityjump.core.game.customizable.DeadlyBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
-import com.infinityjump.core.graphics.QuadRenderer;
+import com.infinityjump.core.graphics.particles.ParticleRenderer;
+import com.infinityjump.core.graphics.quads.QuadRenderer;
 import com.infinityjump.core.utils.Patterns;
 import com.infinityjump.core.api.Logger;
 
@@ -35,7 +36,8 @@ public final class Level {
 	
 	private Camera camera;
 	
-	private QuadRenderer renderer;
+	private QuadRenderer quadRenderer;
+	private ParticleRenderer particleRenderer;
 	
 	private boolean restart;
 	
@@ -43,7 +45,8 @@ public final class Level {
 		initBlocks = new HashMap<Integer, Block>();
 		blocks = new HashMap<Integer, Block>();
 		
-		renderer = new QuadRenderer();
+		quadRenderer = new QuadRenderer();
+		particleRenderer = new ParticleRenderer();
 	}
 	
 	public void read(InputStream input) {
@@ -228,12 +231,12 @@ public final class Level {
 		
 		camera = new Camera(player);
 		
-		renderer.addRenderable(boundary);
-		renderer.addRenderable(target);
+		quadRenderer.addRenderable(boundary);
+		quadRenderer.addRenderable(target);
 		
-		for (Block block : blocks.values()) renderer.addRenderable(block);
+		for (Block block : blocks.values()) quadRenderer.addRenderable(block);
 		
-		renderer.addRenderable(player);
+		quadRenderer.addRenderable(player);
 	}
 	
 	public void restart() {
@@ -242,18 +245,19 @@ public final class Level {
 	
 	public void reset() {
 		blocks.clear();
-		renderer.clear();
+		quadRenderer.clear();
+		particleRenderer.clear();
 		
-		renderer.addRenderable(boundary);
-		renderer.addRenderable(target);
+		quadRenderer.addRenderable(boundary);
+		quadRenderer.addRenderable(target);
 		
 		initBlocks.forEach((id, quad) -> {
 			Block cloned = quad.clone();
 			blocks.put(id, cloned);
-			renderer.addRenderable(cloned);
+			quadRenderer.addRenderable(cloned);
 		}); // fill quads with initial quads
 		
-		renderer.addRenderable(player);
+		quadRenderer.addRenderable(player);
 		
 		player.setX(initPX);
 		player.setY(initPY);
@@ -352,7 +356,8 @@ public final class Level {
 	}
 	
 	public void render(Theme theme, float shiftX, float playerAlpha) {
-		renderer.render(camera, theme, shiftX);
+		quadRenderer.render(camera, theme, shiftX);
+		particleRenderer.render(camera, shiftX);
 	}
 	
 	public Player getPlayer() {
@@ -369,6 +374,10 @@ public final class Level {
 	
 	public Map<Integer, Block> getBlocks() {
 		return blocks;
+	}
+	
+	public ParticleRenderer getParticleRenderer() {
+		return particleRenderer;
 	}
 	
 	public float getScrollDistToLeft() {

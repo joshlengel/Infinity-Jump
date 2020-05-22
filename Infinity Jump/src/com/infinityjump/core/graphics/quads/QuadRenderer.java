@@ -1,4 +1,4 @@
-package com.infinityjump.core.graphics;
+package com.infinityjump.core.graphics.quads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Boundary;
 import com.infinityjump.core.game.base.quad.QuadShape;
+import com.infinityjump.core.graphics.GraphicsAssets;
 
 public class QuadRenderer {
 	
