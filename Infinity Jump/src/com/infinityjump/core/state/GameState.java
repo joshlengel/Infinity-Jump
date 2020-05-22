@@ -16,6 +16,8 @@ import com.infinityjump.core.script.ScriptStream;
 
 public class GameState implements State {
 
+	private Map<String, Object> args;
+	
 	private Theme theme;
 	
 	private LevelStream levelStream;
@@ -25,14 +27,16 @@ public class GameState implements State {
 	private Script script;
 	
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
-		this.theme = (Theme)args[0];
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
+		this.args = args;
 		
-		this.levelStream = (LevelStream)args[1];
-		this.level = (Level)args[2];
+		this.theme = (Theme)args.get("theme");
 		
-		this.scriptStream = (ScriptStream)args[3];
-		this.script = (Script)args[4];
+		this.levelStream = (LevelStream)args.get("levelStream");
+		this.level = (Level)args.get("level");
+		
+		this.scriptStream = (ScriptStream)args.get("scriptStream");
+		this.script = (Script)args.get("script");
 		
 		script.read(level);
 		script.setup(level);
@@ -64,14 +68,20 @@ public class GameState implements State {
 	public void changeState() {
 		if (levelStream.hasNext() && scriptStream.hasNext()) {
 			Sounds.playSound("level-finished");
-			StateMachine.machine.changeState("transition", new Object[] { theme, levelStream, level, levelStream.next(), scriptStream, scriptStream.next() });
+			
+			args.remove("level");
+			args.put("previous", level);
+			args.put("next", levelStream.next());
+			args.put("script", scriptStream.next());
+			
+			StateMachine.machine.changeState("transition", args);
 		} else {
 			StateMachine.machine.changeState("end-level", null);
 		}
 	}
 	
 	public void restart() {
-		StateMachine.machine.changeState("restart", new Object[] { theme, levelStream, level, scriptStream, script });
+		StateMachine.machine.changeState("restart", args);
 	}
 	
 	public Level getLevel() {

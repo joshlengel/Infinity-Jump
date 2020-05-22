@@ -1,6 +1,5 @@
 package com.infinityjump.game.states;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
@@ -9,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.infinityjump.core.api.Input;
 import com.infinityjump.core.game.LevelStream;
-import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.script.ScriptStream;
 import com.infinityjump.core.state.State;
 import com.infinityjump.core.state.StateMachine;
@@ -18,7 +16,7 @@ import com.infinityjump.game.impl.InputAPIImpl;
 public class StartState implements State {
 
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
 		if (!GLFW.glfwInit()) {
 			System.err.println("Error initializing GLFW");
 		}
@@ -35,12 +33,15 @@ public class StartState implements State {
 		
 		Input.init(new InputAPIImpl(window));
 		
-		LevelStream levelStream = (LevelStream) args[0];
-		ScriptStream scriptStream = (ScriptStream) args[1];
+		LevelStream levelStream = (LevelStream) args.get("levelStream");
+		ScriptStream scriptStream = (ScriptStream) args.get("scriptStream");
 		
 		GLFW.glfwShowWindow(window);
 		
-		StateMachine.machine.changeState("start-level", new Object[] { (Theme)args[2], levelStream, levelStream.next(), scriptStream, scriptStream.next(), (InputStream)args[3], (InputStream)args[4] });
+		args.put("level", levelStream.next());
+		args.put("script", scriptStream.next());
+		
+		StateMachine.machine.changeState("start-level", args);
 	}
 
 	@Override

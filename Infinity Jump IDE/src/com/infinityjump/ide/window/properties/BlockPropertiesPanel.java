@@ -59,7 +59,7 @@ public class BlockPropertiesPanel extends PropertyPanel {
 		
 		ComboBox<String> typeField = new ComboBox<String>();
 
-		for (Type type : Type.values()) {
+		for (Type type : Type.CUSTOMIZABLES) {
 			typeField.getItems().add(type.toString());
 		}
 		

@@ -34,7 +34,7 @@ public class StateMachine {
 		this.resources = new HashMap<>();
 	}
 	
-	public void changeState(String newState, Object[] args) {
+	public void changeState(String newState, Map<String, Object> args) {
 		if (current != null) current.finish();
 		
 		current = states.get(newState).get();

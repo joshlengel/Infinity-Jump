@@ -14,7 +14,7 @@ public class TransitionState implements State {
 
 	public static final double TRANSITION_LENGTH = 2.0;
 	
-	private Object[] args;
+	private Map<String, Object> args;
 	
 	private Theme theme;
 	private Level previous, next;
@@ -24,13 +24,13 @@ public class TransitionState implements State {
 	private float totalShiftDist;
 	
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
 		this.args = args;
 		
-		theme    = (Theme)args[0];
+		theme    = (Theme)args.get("theme");
 		
-		previous = (Level)args[2];
-		next     = (Level)args[3];
+		previous = (Level)args.get("previous");
+		next     = (Level)args.get("next");
 		
 		totalShiftDist = previous.getScrollDistToRight() + 1.0f + next.getScrollDistToLeft();
 	}
@@ -42,9 +42,9 @@ public class TransitionState implements State {
 		timer += dt;
 		
 		if (timer > TRANSITION_LENGTH) {
-			args[2] = args[3];
-			args[3] = args[4];
-			args[4] = args[5];
+			args.remove("previous");
+			args.remove("next");
+			args.put("level", next);
 			StateMachine.machine.changeState("game", args);
 		}
 	}

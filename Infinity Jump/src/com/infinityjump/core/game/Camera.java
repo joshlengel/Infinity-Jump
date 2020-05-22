@@ -1,12 +1,16 @@
 package com.infinityjump.core.game;
 
 import com.infinityjump.core.game.base.Player;
+import com.infinityjump.core.utils.GlobalProperties;
 
 public class Camera {
 
-	/// TODO Move to config files
-	private static final float SCROLL_MARGIN = 0.1f;
-	private static final float SCROLL_SPEED = 2.0f;
+	private static float SCROLL_SPEED, SCROLL_MARGIN;
+	
+	public static void init() {
+		SCROLL_SPEED = Float.parseFloat((String) GlobalProperties.properties.get("camera-scroll-speed"));
+		SCROLL_MARGIN = Float.parseFloat((String) GlobalProperties.properties.get("camera-scroll-margin"));
+	}
 	
 	private Player player;
 	private float x, y, tX, tY;

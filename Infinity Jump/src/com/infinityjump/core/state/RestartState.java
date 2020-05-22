@@ -11,7 +11,7 @@ public class RestartState implements State {
 
 	private static final double FADE_TIME = 1.0d;
 	
-	private Object[] args;
+	private Map<String, Object> args;
 	
 	private Theme theme;
 	private Level level;
@@ -20,12 +20,12 @@ public class RestartState implements State {
 	private double timer = 0;
 	
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
 		this.args = args;
 		
-		theme = (Theme)args[0];
-		level = (Level)args[2];
-		script = (Script)args[4];
+		theme = (Theme)args.get("theme");
+		level = (Level)args.get("level");
+		script = (Script)args.get("script");
 		
 		level.restart(); // break out of update loop
 	}

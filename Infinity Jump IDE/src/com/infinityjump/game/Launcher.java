@@ -2,6 +2,7 @@ package com.infinityjump.game;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,17 +80,35 @@ public class Launcher {
 		
 		InputStream vertexSource = null;
 		InputStream fragmentSource = null;
+		InputStream gpSource = null;
 		
 		try {
 			vertexSource = new FileInputStream(assetDir + "shader/quadVertex.glsl");
 			fragmentSource = new FileInputStream(assetDir + "shader/quadFragment.glsl");
+			gpSource = new FileInputStream(assetDir + "infinity-jump.properties");
 		} catch (FileNotFoundException e) {
 			System.err.println("Error reading shader files");
 			return;
 		}
 		
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("theme", theme);
+		args.put("levelStream", new LevelStreamImpl(level));
+		args.put("scriptStream", new ScriptStreamImpl(script));
+		args.put("vertexSource", vertexSource);
+		args.put("fragmentSource", fragmentSource);
+		args.put("gpSource", gpSource);
+		
 		StateMachine.init(states);
-		StateMachine.machine.changeState("start", new Object[] { new LevelStreamImpl(level), new ScriptStreamImpl(script), theme, vertexSource, fragmentSource });
+		StateMachine.machine.changeState("start", args);
+		
+		try {
+			vertexSource.close();
+			fragmentSource.close();
+			gpSource.close();
+		} catch (IOException e) {
+			System.err.println("Error closing resources for infinity jump launcher");
+		}
 		
 		long window = (long) StateMachine.machine.getSharedResources().get("window-handle");
 		

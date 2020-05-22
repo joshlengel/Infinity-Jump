@@ -9,7 +9,7 @@ import com.infinityjump.core.state.State;
 public class CleanUpState implements State {
 
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
 		GLFW.glfwDestroyWindow((long)resources.get("window-handle"));
 		GLFW.glfwTerminate();
 	}

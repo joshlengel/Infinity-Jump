@@ -62,8 +62,8 @@
         </copy>
     </target>
     <target depends="clean,init" name="build">
-    	<ant antfile="../Infinity Jump v2.0/Infinity Jump v2.0.xml" target="build" useNativeBaseDir="true"/>
-    	<ant antfile="../Infinity Jump v2.0/Infinity Jump v2.0.xml" target="export" useNativeBaseDir="true"/>
+    	<ant antfile="../Infinity Jump/Infinity Jump.xml" target="build" useNativeBaseDir="true"/>
+    	<ant antfile="../Infinity Jump/Infinity Jump.xml" target="export" useNativeBaseDir="true"/>
     	<javac debug="true" debuglevel="source,lines,vars" destdir="bin" source="${source}" target="${target}" includeantruntime="false">
         	<src path="src"/>
         	<classpath refid="Infinity Jump IDE.classpath"/>

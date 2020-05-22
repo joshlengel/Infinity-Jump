@@ -20,6 +20,22 @@ Warning:
 	- Minor bugs. Please contact me (Email: jlengel12@gmail.com) to report bugs
 
 --------------------------------------------------
+--------------------------------------------------
+
+Version:     2.0.1
+Author:      Josh Lengel
+Description: Added teleport quad support and integrated Infinity Jump v2.0.1.
+
+---------------- Version 2.0.1 ------------------
+
+Features:
+	- Using Git as version control.
+	- Minor bugs have been fixed
+	- Script file support using lua
+	
+Warning:
+	- No reported bugs (to report, contact jlengel12@gmail.com)
+--------------------------------------------------
 
 --------------- How to use -----------------------
 
@@ -49,11 +65,5 @@ Launch current level: Ctrl+L
 To launch the Infinity Jump IDE, double-click the "Infinity Jump IDE.exe" file located in bin folder.
 You can also create a desktop shortcut.
 DO NOT MOVE THIS FILE!
-
--------------- For Developers ---------------------
-
-If you wish to compile the c++ launcher with your own compiler make sure you have
-the MinGW G++ compiler installed and make sure that the location of G++ is set in
-the PATH system environment variable
 
 ---------------------------------------------------

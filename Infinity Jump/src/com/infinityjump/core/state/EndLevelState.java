@@ -7,7 +7,7 @@ import com.infinityjump.core.graphics.GraphicsAssets;
 public class EndLevelState implements State {
 
 	@Override
-	public void enter(Object[] args, Map<String, Object> resources) {
+	public void enter(Map<String, Object> args, Map<String, Object> resources) {
 		GraphicsAssets.terminate();
 		StateMachine.terminate();
 	}
