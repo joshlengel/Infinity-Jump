@@ -5,14 +5,12 @@ import java.util.Map;
 import com.infinityjump.core.api.OpenGL;
 import com.infinityjump.core.api.OpenGL.OpenGLAPI;
 import com.infinityjump.core.game.Color;
-import com.infinityjump.core.game.Level;
-import com.infinityjump.core.game.LevelStream;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.load.Playable;
+import com.infinityjump.core.game.load.PlayableBuffer;
 import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.sound.Sounds;
 import com.infinityjump.core.graphics.GraphicsAssets;
-import com.infinityjump.core.script.Script;
-import com.infinityjump.core.script.ScriptStream;
 
 public class GameState implements State {
 
@@ -20,11 +18,8 @@ public class GameState implements State {
 	
 	private Theme theme;
 	
-	private LevelStream levelStream;
-	private Level level;
-	
-	private ScriptStream scriptStream;
-	private Script script;
+	private Playable playable;
+	private PlayableBuffer playableBuffer;
 	
 	@Override
 	public void enter(Map<String, Object> args, Map<String, Object> resources) {
@@ -32,22 +27,17 @@ public class GameState implements State {
 		
 		this.theme = (Theme)args.get("theme");
 		
-		this.levelStream = (LevelStream)args.get("levelStream");
-		this.level = (Level)args.get("level");
+		this.playableBuffer = (PlayableBuffer)args.get("playableBuffer");
+		this.playable = (Playable)args.get("playable");
 		
-		this.scriptStream = (ScriptStream)args.get("scriptStream");
-		this.script = (Script)args.get("script");
-		
-		script.read(level);
-		script.setup(level);
+		playable.init();
 		
 		GraphicsAssets.assertLoaded();
 	}
 
 	@Override
 	public void update(double dt) {
-		script.update(level, dt);
-		level.update(theme, dt);
+		playable.update(theme, dt);
 	}
 
 	@Override
@@ -62,17 +52,16 @@ public class GameState implements State {
 		api.clearColor(boundaryColor.r, boundaryColor.g, boundaryColor.b, boundaryColor.a);
 		api.clear();
 		
-		level.render(theme);
+		playable.render(theme);
 	}
 	
 	public void changeState() {
-		if (levelStream.hasNext() && scriptStream.hasNext()) {
+		if (playableBuffer.hasNext()) {
 			Sounds.playSound("level-finished");
 			
 			args.remove("level");
-			args.put("previous", level);
-			args.put("next", levelStream.next());
-			args.put("script", scriptStream.next());
+			args.put("previous", playable);
+			args.put("next", playableBuffer.get());
 			
 			StateMachine.machine.changeState("transition", args);
 		} else {
@@ -84,7 +73,7 @@ public class GameState implements State {
 		StateMachine.machine.changeState("restart", args);
 	}
 	
-	public Level getLevel() {
-		return level;
+	public Playable getPlayable() {
+		return playable;
 	}
 }

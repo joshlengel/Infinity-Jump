@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
 import com.infinityjump.core.game.Color;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.quad.QuadShape;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.properties.PlayerProperties;
 import com.infinityjump.core.game.sound.Sounds;
 import com.infinityjump.core.graphics.particles.ParticleEmitter;

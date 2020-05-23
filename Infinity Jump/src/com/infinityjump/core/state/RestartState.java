@@ -3,9 +3,8 @@ package com.infinityjump.core.state;
 import java.util.Map;
 
 import com.infinityjump.core.api.Input;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
-import com.infinityjump.core.script.Script;
+import com.infinityjump.core.game.load.Playable;
 
 public class RestartState implements State {
 
@@ -14,8 +13,7 @@ public class RestartState implements State {
 	private Map<String, Object> args;
 	
 	private Theme theme;
-	private Level level;
-	private Script script;
+	private Playable playable;
 	
 	private double timer = 0;
 	
@@ -24,10 +22,9 @@ public class RestartState implements State {
 		this.args = args;
 		
 		theme = (Theme)args.get("theme");
-		level = (Level)args.get("level");
-		script = (Script)args.get("script");
+		playable = (Playable)args.get("playable");
 		
-		level.restart(); // break out of update loop
+		playable.restart(); // break out of update loop
 	}
 
 	@Override
@@ -37,8 +34,7 @@ public class RestartState implements State {
 		timer += dt;
 		
 		if (timer > FADE_TIME) {
-			level.reset();
-			script.reset(level);
+			playable.reset();
 			StateMachine.machine.changeState("game", args);
 		}
 	}
@@ -48,6 +44,6 @@ public class RestartState implements State {
 
 	@Override
 	public void render() {
-		level.render(theme, 0.0f, (float)(1.0f - timer / FADE_TIME));
+		playable.render(theme, 0.0f, (float)(1.0f - timer / FADE_TIME));
 	}
 }

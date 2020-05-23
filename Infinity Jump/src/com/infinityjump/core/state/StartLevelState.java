@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.infinityjump.core.api.Logger;
 import com.infinityjump.core.game.Camera;
+import com.infinityjump.core.game.level.LevelStream;
+import com.infinityjump.core.game.load.PlayableBuffer;
+import com.infinityjump.core.game.script.ScriptStream;
 import com.infinityjump.core.game.sound.Sounds;
 import com.infinityjump.core.graphics.GraphicsAssets;
 import com.infinityjump.core.utils.GlobalProperties;
@@ -41,13 +44,29 @@ public class StartLevelState implements State {
 		Sounds.init();
 		
 		Camera.init();
+		PlayableBuffer.init();
 		
 		if (StateMachine.machine.shouldExit()) return;
 		
 		args.remove("vertexSource");
 		args.remove("fragmentSource");
 		
-		StateMachine.machine.changeState("game", args);
+		PlayableBuffer buffer = new PlayableBuffer((LevelStream)args.get("levelStream"), (ScriptStream)args.get("scriptStream"));
+		
+		args.remove("levelStream");
+		args.remove("scriptStream");
+		
+		if (buffer.hasNext()) {
+		
+			buffer.start();
+			
+			args.put("playableBuffer", buffer);
+			args.put("playable", buffer.get());
+			
+			StateMachine.machine.changeState("game", args);
+		} else {
+			StateMachine.machine.changeState("end-level", null);
+		}
 	}
 
 	@Override

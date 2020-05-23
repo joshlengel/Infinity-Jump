@@ -1,4 +1,4 @@
-package com.infinityjump.core.game;
+package com.infinityjump.core.game.level;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +12,9 @@ import com.infinityjump.core.api.Input;
 import com.infinityjump.core.api.Input.InputAPI.DragEvent;
 import com.infinityjump.core.game.base.Boundary;
 import com.infinityjump.core.game.base.Player;
+import com.infinityjump.core.game.Camera;
+import com.infinityjump.core.game.Collision;
+import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Block;
 import com.infinityjump.core.game.base.Target;
 import com.infinityjump.core.game.customizable.BouncyBlock;

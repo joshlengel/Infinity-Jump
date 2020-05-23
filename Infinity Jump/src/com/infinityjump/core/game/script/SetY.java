@@ -1,4 +1,4 @@
-package com.infinityjump.core.script;
+package com.infinityjump.core.game.script;
 
 import java.math.BigDecimal;
 
@@ -7,17 +7,17 @@ import org.luaj.vm2.lib.TwoArgFunction;
 
 import com.infinityjump.core.game.base.Block;
 
-public class SetVY extends TwoArgFunction {
+public class SetY extends TwoArgFunction {
 
 	private Block quad;
 	
-	public SetVY(Block quad) {
+	public SetY(Block quad) {
 		this.quad = quad;
 	}
 	
 	@Override
-	public LuaValue call(LuaValue self, LuaValue vy) {
-		quad.setVY(new BigDecimal(vy.checknumber().tofloat()));
+	public LuaValue call(LuaValue self, LuaValue y) {
+		quad.setY(new BigDecimal(y.checknumber().tofloat()));
 		return null;
 	}
 }

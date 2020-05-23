@@ -3,10 +3,10 @@ package com.infinityjump.core.game.customizable;
 import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.base.Block;
 import com.infinityjump.core.game.properties.BouncyProperties;
 import com.infinityjump.core.utils.BigConstants;

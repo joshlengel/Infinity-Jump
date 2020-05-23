@@ -1,4 +1,4 @@
-package com.infinityjump.core.script;
+package com.infinityjump.core.game.script;
 
 public interface ScriptStream {
 

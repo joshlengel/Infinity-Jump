@@ -1,4 +1,4 @@
-package com.infinityjump.core.script;
+package com.infinityjump.core.game.script;
 
 import java.util.Map.Entry;
 
@@ -10,8 +10,8 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.base.Block;
+import com.infinityjump.core.game.level.Level;
 
 public class Script {
 

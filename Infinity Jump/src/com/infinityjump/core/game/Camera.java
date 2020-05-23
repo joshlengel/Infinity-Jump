@@ -8,8 +8,8 @@ public class Camera {
 	private static float SCROLL_SPEED, SCROLL_MARGIN;
 	
 	public static void init() {
-		SCROLL_SPEED = Float.parseFloat((String) GlobalProperties.properties.get("camera-scroll-speed"));
-		SCROLL_MARGIN = Float.parseFloat((String) GlobalProperties.properties.get("camera-scroll-margin"));
+		SCROLL_SPEED = Float.parseFloat(GlobalProperties.properties.getProperty("camera-scroll-speed"));
+		SCROLL_MARGIN = Float.parseFloat(GlobalProperties.properties.getProperty("camera-scroll-margin"));
 	}
 	
 	private Player player;

@@ -4,9 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.infinityjump.core.game.Level;
+import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.Theme;
-import com.infinityjump.core.script.Script;
+import com.infinityjump.core.game.script.Script;
 import com.infinityjump.game.Launcher;
 import com.infinityjump.ide.window.LuaEditorView;
 import com.infinityjump.ide.window.leveleditor.LevelView;

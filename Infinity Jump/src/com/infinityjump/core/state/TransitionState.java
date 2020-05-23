@@ -6,8 +6,8 @@ import com.infinityjump.core.api.Input;
 import com.infinityjump.core.api.OpenGL;
 import com.infinityjump.core.api.OpenGL.OpenGLAPI;
 import com.infinityjump.core.game.Color;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.load.Playable;
 import com.infinityjump.core.game.properties.BlockProperties;
 
 public class TransitionState implements State {
@@ -17,7 +17,7 @@ public class TransitionState implements State {
 	private Map<String, Object> args;
 	
 	private Theme theme;
-	private Level previous, next;
+	private Playable previous, next;
 	
 	private double timer;
 	
@@ -29,10 +29,10 @@ public class TransitionState implements State {
 		
 		theme    = (Theme)args.get("theme");
 		
-		previous = (Level)args.get("previous");
-		next     = (Level)args.get("next");
+		previous = (Playable)args.get("previous");
+		next     = (Playable)args.get("next");
 		
-		totalShiftDist = previous.getScrollDistToRight() + 1.0f + next.getScrollDistToLeft();
+		totalShiftDist = previous.getLevel().getScrollDistToRight() + 1.0f + next.getLevel().getScrollDistToLeft();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class TransitionState implements State {
 		if (timer > TRANSITION_LENGTH) {
 			args.remove("previous");
 			args.remove("next");
-			args.put("level", next);
+			args.put("playable", next);
 			StateMachine.machine.changeState("game", args);
 		}
 	}

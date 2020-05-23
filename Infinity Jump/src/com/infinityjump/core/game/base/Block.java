@@ -3,11 +3,11 @@ package com.infinityjump.core.game.base;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.base.quad.QuadCollidable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.level.Level;
 
 public class Block extends QuadShapeImpl implements QuadCollidable {
 	

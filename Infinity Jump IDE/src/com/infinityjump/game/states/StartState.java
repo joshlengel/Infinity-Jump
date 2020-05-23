@@ -7,8 +7,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import com.infinityjump.core.api.Input;
-import com.infinityjump.core.game.LevelStream;
-import com.infinityjump.core.script.ScriptStream;
 import com.infinityjump.core.state.State;
 import com.infinityjump.core.state.StateMachine;
 import com.infinityjump.game.impl.InputAPIImpl;
@@ -32,14 +30,8 @@ public class StartState implements State {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		Input.init(new InputAPIImpl(window));
-		
-		LevelStream levelStream = (LevelStream) args.get("levelStream");
-		ScriptStream scriptStream = (ScriptStream) args.get("scriptStream");
-		
+	
 		GLFW.glfwShowWindow(window);
-		
-		args.put("level", levelStream.next());
-		args.put("script", scriptStream.next());
 		
 		StateMachine.machine.changeState("start-level", args);
 	}

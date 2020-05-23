@@ -3,9 +3,9 @@ package com.infinityjump.core.game.base.quad;
 import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
-import com.infinityjump.core.game.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Player;
+import com.infinityjump.core.game.level.Level;
 
 public interface QuadCollidable extends QuadShape {
 

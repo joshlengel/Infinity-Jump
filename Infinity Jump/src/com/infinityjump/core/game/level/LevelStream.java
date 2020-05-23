@@ -1,4 +1,4 @@
-package com.infinityjump.core.game;
+package com.infinityjump.core.game.level;
 
 public interface LevelStream {
 	
