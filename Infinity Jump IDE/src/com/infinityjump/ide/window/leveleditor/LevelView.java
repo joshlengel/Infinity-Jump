@@ -58,6 +58,16 @@ public class LevelView extends Pane {
 			if (e.getButton() == MouseButton.PRIMARY) {
 				data.mouseX = e.getX();
 				data.mouseY = e.getY();
+			} else if (e.getButton() == MouseButton.SECONDARY) {
+				data.rMouseX = e.getX();
+				data.rMouseY = e.getY();
+				mouseHandler.handleRightPress();
+			}
+		});
+		
+		drawable.setOnMouseReleased(e -> {
+			if (e.getButton() == MouseButton.SECONDARY) {
+				mouseHandler.handleRightRelease();
 			}
 		});
 		
@@ -88,7 +98,17 @@ public class LevelView extends Pane {
 				data.mouseX = nMouseX;
 				data.mouseY = nMouseY;
 				
-				data.view.repaint();
+				repaint();
+			} else if (e.getButton() == MouseButton.SECONDARY) {
+				double nRMouseX = e.getX();
+				double nRMouseY = e.getY();
+				
+				mouseHandler.handleRightDrag(nRMouseX, nRMouseY);
+				
+				data.rMouseX = nRMouseX;
+				data.rMouseY = nRMouseY;
+				
+				repaint();
 			}
 		});
 		
@@ -220,6 +240,13 @@ public class LevelView extends Pane {
 			Rectangle rect = getRect(data.highlighted);
 			
 			context.setStroke(Color.CADETBLUE);
+			context.strokeRect(rect.getX() - zScrollX, rect.getY() * data.aspectRatio + zScrollY, rect.getWidth(), rect.getHeight() * data.aspectRatio);
+		}
+		
+		if (data.rightClickHighlighted != null) {
+			Rectangle rect = getRect(data.rightClickHighlighted);
+			
+			context.setStroke(Color.DARKBLUE);
 			context.strokeRect(rect.getX() - zScrollX, rect.getY() * data.aspectRatio + zScrollY, rect.getWidth(), rect.getHeight() * data.aspectRatio);
 		}
 		

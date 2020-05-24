@@ -45,6 +45,7 @@ public class LevelData {
 	
 	public Block spawningBlock;
 	public QuadShape highlighted;
+	public QuadShape rightClickHighlighted;
 	
 	public static class QuadEdge {
 		QuadShape quad;
@@ -62,7 +63,7 @@ public class LevelData {
 	public QuadEdge draggingOverEdge;
 	public boolean draggingOverBoundary;
 	
-	public double mouseX, mouseY;
+	public double mouseX, mouseY, rMouseX, rMouseY;
 	public double scrollX, scrollY;
 	public boolean scrolling;
 	public double zoom = 1.0;

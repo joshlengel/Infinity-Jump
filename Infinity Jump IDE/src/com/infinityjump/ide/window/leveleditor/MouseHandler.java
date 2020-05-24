@@ -59,6 +59,31 @@ public class MouseHandler {
 		}
 	}
 	
+	public void handleRightPress() {
+		double glX = rMouseToGLX();
+		double glY = rMouseToGLY();
+		
+		QuadShape pressed = null;
+		
+		if (Utils.pressed(data.player, glX, glY)) {
+			pressed = data.player;
+		} else {
+			if (Utils.pressed(data.target, glX, glY)) {
+				pressed = data.target;
+			}
+			
+			for (QuadShape shape : data.blocks.values()) {
+				if (Utils.pressed(shape, glX, glY)) {
+					pressed = shape;
+				}
+			}
+		}
+		
+		data.rightClickHighlighted = pressed;
+		
+		data.view.repaint();
+	}
+	
 	public void handleLeftDrag(double mx, double my) {
 		double dx = (mx - data.mouseX) * sensitivity;
 		double dy = (my - data.mouseY) * sensitivity;
@@ -203,6 +228,16 @@ public class MouseHandler {
 		}
 	}
 	
+	public void handleRightDrag(double mx, double my) {
+		if (data.rightClickHighlighted == null) return;
+		
+		double dx = ((mx - data.rMouseX) * data.cacheInvWidth * 2.0) * data.cacheInvZoom;
+		double dy = -((my - data.rMouseY) * data.cacheInvWidth * 2.0) * data.cacheInvZoom;
+		
+		data.rightClickHighlighted.setX(data.rightClickHighlighted.getX().add(new BigDecimal(dx)));
+		data.rightClickHighlighted.setY(data.rightClickHighlighted.getY().add(new BigDecimal(dy)));
+	}
+	
 	public void handleMoved() {
 		float glX = (float) mouseToGLX();
 		float glY = (float) mouseToGLY();
@@ -254,6 +289,14 @@ public class MouseHandler {
 
 			data.view.repaint();
 		}
+	}
+	
+	public void handleRightRelease() {
+		if (data.rightClickHighlighted == null) return;
+		
+		data.rightClickHighlighted = null;
+		
+		data.view.repaint();
 	}
 	
 	private static boolean isDragOverEligable(QuadEdge draggingEdge, QuadEdge draggingOverEdge) {
@@ -315,15 +358,27 @@ public class MouseHandler {
 	}
 	
 	private double mouseToGLX() {
-		double rScrollX = data.scrollX * data.cacheInvWidth * 2.0;
-		
-		return (float) ((data.mouseX * data.cacheInvWidth * 2.0 - 1.0) * data.cacheInvZoom + rScrollX);
+		return getGLX(data.mouseX);
 	}
 	
 	private double mouseToGLY() {
-		double rScrollY = data.scrollY * data.cacheInvWidth * 2.0;
-		
-		return (float) ((1.0 - data.mouseY * data.cacheInvWidth * 2.0) * data.cacheInvZoom + rScrollY);
+		return getGLY(data.mouseY);
+	}
+	
+	private double rMouseToGLX() {
+		return getGLX(data.rMouseX);
+	}
+	
+	private double rMouseToGLY() {
+		return getGLY(data.rMouseY);
+	}
+	
+	private double getGLX(double mx) {
+		return (mx * data.cacheInvWidth * 2.0 - 1.0) * data.cacheInvZoom + data.scrollX * data.cacheInvWidth * 2.0;
+	}
+	
+	private double getGLY(double my) {
+		return (1.0 - my * data.cacheInvWidth * 2.0) * data.cacheInvZoom + data.scrollY * data.cacheInvWidth * 2.0;
 	}
 	
 	public static void setSensitivity(double sensitivity) {
