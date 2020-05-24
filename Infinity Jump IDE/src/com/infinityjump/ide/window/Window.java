@@ -3,9 +3,11 @@ package com.infinityjump.ide.window;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.prefs.Preferences;
 
 import com.infinityjump.core.game.Theme;
+import com.infinityjump.core.game.script.Script;
 import com.infinityjump.game.Launcher;
 import com.infinityjump.ide.Utils;
 import com.infinityjump.ide.window.leveleditor.LevelData;
@@ -15,6 +17,9 @@ import com.infinityjump.ide.window.menu.FileMenu;
 import com.infinityjump.ide.window.menu.SettingsMenu;
 import com.infinityjump.ide.window.menu.TestMenu;
 import com.infinityjump.ide.window.menu.ViewMenu;
+import com.infinityjump.ide.window.scripteditor.LuaConsole;
+import com.infinityjump.ide.window.scripteditor.LuaConsoleView;
+import com.infinityjump.ide.window.scripteditor.LuaEditorView;
 
 import javafx.application.Application;
 import javafx.geometry.Orientation;
@@ -30,6 +35,7 @@ public class Window extends Application {
 	
 	private LevelView levelView;
 	private LuaEditorView luaEditorView;
+	private LuaConsoleView luaConsoleView;
 	
 	public static void main(String[] args) {
 		assetDir = args[0];
@@ -41,6 +47,7 @@ public class Window extends Application {
 		Launcher.init(assetDir);
 		GlobalProperties.init(assetDir);
 		LevelData.init();
+		LuaConsole.init();
 		
 		stage.setTitle("Infinity Jump IDE");
 		
@@ -50,8 +57,11 @@ public class Window extends Application {
 		
 		SplitPane editor = new SplitPane();
 		
-		SplitPane center = new SplitPane();
-		center.setOrientation(Orientation.HORIZONTAL);
+		SplitPane levelEditor = new SplitPane();
+		levelEditor.setOrientation(Orientation.HORIZONTAL);
+		
+		SplitPane luaEditor = new SplitPane();
+		luaEditor.setOrientation(Orientation.VERTICAL);
 		
 		Preferences prefs = Preferences.userRoot();
 		
@@ -62,11 +72,15 @@ public class Window extends Application {
 		Theme theme = new Theme(themeStream);
 		themeStream.close();
 		
-		levelView = new LevelView(center, theme);
+		levelView = new LevelView(levelEditor, theme);
 		levelView.load(levelStream);
 		
 		luaEditorView = new LuaEditorView();
 		luaEditorView.load(defaultScript);
+		
+		luaConsoleView = new LuaConsoleView();
+		
+		Script.setConsole(new PrintStream(luaConsoleView.getConsole()));
 		
 		levelStream.close();
 		
@@ -84,9 +98,10 @@ public class Window extends Application {
 		
 		root.setTop(menuBar);
 		
-		center.getItems().add(levelView);
+		levelEditor.getItems().add(levelView);
+		luaEditor.getItems().addAll(luaEditorView, luaConsoleView);
 		
-		editor.getItems().addAll(center, luaEditorView);
+		editor.getItems().addAll(levelEditor, luaEditor);
 		
 		root.setCenter(editor);
 

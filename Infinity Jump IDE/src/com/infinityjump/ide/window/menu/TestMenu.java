@@ -8,8 +8,8 @@ import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.script.Script;
 import com.infinityjump.game.Launcher;
-import com.infinityjump.ide.window.LuaEditorView;
 import com.infinityjump.ide.window.leveleditor.LevelView;
+import com.infinityjump.ide.window.scripteditor.LuaEditorView;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

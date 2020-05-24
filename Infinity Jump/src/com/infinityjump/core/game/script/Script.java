@@ -1,5 +1,6 @@
 package com.infinityjump.core.game.script;
 
+import java.io.PrintStream;
 import java.util.Map.Entry;
 
 import org.luaj.vm2.Globals;
@@ -15,6 +16,8 @@ import com.infinityjump.core.game.level.Level;
 
 public class Script {
 
+	private static final String LINE_SYMBOL = "-----------------------------------------";
+	
 	private static final LuaFunction modifyError = new ZeroArgFunction() {
 
 		@Override
@@ -31,6 +34,12 @@ public class Script {
 		return (LuaTable) new LuaTable().setmetatable(metatable);
 	}
 	
+	private static PrintStream console = System.out;
+	
+	public static void setConsole(PrintStream console) {
+		Script.console = console;
+	}
+	
 	private String source;
 	
 	private Globals globals;
@@ -39,6 +48,8 @@ public class Script {
 	private LuaValue setup, update;
 	
 	private LuaTable quads;
+	
+	private boolean error;
 	
 	public Script(String source) {
 		this.source = source;
@@ -52,12 +63,16 @@ public class Script {
 			
 			reset(level);
 		} catch (LuaError e) {
-			System.err.println("Error compiling lua script:\n" + e.getMessage());
+			console.println(LINE_SYMBOL);
+			console.println("Error compiling lua script:" + System.lineSeparator() + e.getMessage());
+			error = true;
 			return;
 		}
 		
 		if (!chunk.isfunction()) {
-			System.err.println("Invalid lua script. Must supply setup and update functions");
+			console.println(LINE_SYMBOL);
+			console.println("Invalid lua script. Must supply setup and update functions");
+			error = true;
 			return;
 		}
 	}
@@ -99,20 +114,27 @@ public class Script {
 		
 		globals.set("quads", quads);
 		
-		chunk.call();
-		
-		setup = globals.get("setup");
-		update = globals.get("update");
-		
-		setup.checkfunction();
-		update.checkfunction();
+		try {
+			chunk.call();
+			
+			setup = globals.get("setup");
+			update = globals.get("update");
+			
+			setup.checkfunction();
+			update.checkfunction();
+		} catch (LuaError e) {
+			console.println(LINE_SYMBOL);
+			console.println(e.getMessage() + System.lineSeparator());
+			error = true;
+		}
 	}
 	
 	public void setup(Level level) {
 		try {
 			setup.call();
 		} catch (LuaError e) {
-			System.err.println("Error running setup function in lua script:\n" + e.getMessage());
+			console.println("Error running setup function in lua script:" + System.lineSeparator() + e.getMessage());
+			error = true;
 		}
 	}
 	
@@ -137,7 +159,13 @@ public class Script {
 			
 			update.call(LuaValue.valueOf(dt));
 		} catch (LuaError e) {
-			System.err.println("Error running update function in lua script:\n" + e.getMessage());
+			console.println(LINE_SYMBOL);
+			console.println("Error running update function in lua script:" + System.lineSeparator() + e.getMessage());
+			error = true;
 		}
+	}
+	
+	public boolean getError() {
+		return error;
 	}
 }

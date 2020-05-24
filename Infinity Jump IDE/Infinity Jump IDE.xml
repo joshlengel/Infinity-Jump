@@ -63,12 +63,13 @@
     </target>
     <target depends="clean,init" name="build">
     	<ant antfile="../Infinity Jump/Infinity Jump.xml" target="export" useNativeBaseDir="true"/>
+    	<echo message="${ant.project.name}: ${ant.file}"/>
     	<javac debug="true" debuglevel="source,lines,vars" destdir="bin" source="${source}" target="${target}" includeantruntime="false">
         	<src path="src"/>
         	<classpath refid="Infinity Jump IDE.classpath"/>
     	</javac>
     </target>
-	<target name="export">
+	<target name="export" depends="clean,build">
 		<manifestclasspath property="manifest.path" jarfile="dist/lib/Infinity Jump/Infinity Jump IDE.jar" maxParentLevels="4">
 			<classpath refid="jar.Infinity Jump IDE.classpath"/>
 		</manifestclasspath>

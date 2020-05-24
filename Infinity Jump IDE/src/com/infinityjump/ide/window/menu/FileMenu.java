@@ -6,8 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.infinityjump.ide.window.LuaEditorView;
 import com.infinityjump.ide.window.leveleditor.LevelView;
+import com.infinityjump.ide.window.scripteditor.LuaEditorView;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

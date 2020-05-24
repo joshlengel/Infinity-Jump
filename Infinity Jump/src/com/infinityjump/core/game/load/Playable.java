@@ -3,6 +3,7 @@ package com.infinityjump.core.game.load;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.script.Script;
+import com.infinityjump.core.state.StateMachine;
 
 public class Playable {
 
@@ -16,11 +17,28 @@ public class Playable {
 	
 	public void init() {
 		script.read(level);
+		
+		if (script.getError()) {
+			StateMachine.terminate();
+			return;
+		}
+		
 		script.setup(level);
+		
+		if (script.getError()) {
+			StateMachine.terminate();
+			return;
+		}
 	}
 	
 	public void update(Theme theme, double dt) {
 		script.update(level, dt);
+		
+		if (script.getError()) {
+			StateMachine.terminate();
+			return;
+		}
+		
 		level.update(theme, dt);
 	}
 	
@@ -39,6 +57,10 @@ public class Playable {
 	public void reset() {
 		level.reset();
 		script.read(level);
+		
+		if (script.getError()) {
+			StateMachine.terminate();
+		}
 	}
 	
 	public Level getLevel() {

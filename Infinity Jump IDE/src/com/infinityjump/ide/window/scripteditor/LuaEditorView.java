@@ -1,4 +1,4 @@
-package com.infinityjump.ide.window;
+package com.infinityjump.ide.window.scripteditor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
