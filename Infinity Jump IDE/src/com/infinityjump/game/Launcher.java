@@ -1,5 +1,6 @@
 package com.infinityjump.game;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -83,9 +84,9 @@ public class Launcher {
 		InputStream gpSource = null;
 		
 		try {
-			vertexSource = new FileInputStream(assetDir + "shader/quadVertex.glsl");
-			fragmentSource = new FileInputStream(assetDir + "shader/quadFragment.glsl");
-			gpSource = new FileInputStream(assetDir + "infinity-jump.properties");
+			vertexSource = new FileInputStream(new File(assetDir, "shader/quadVertex.glsl"));
+			fragmentSource = new FileInputStream(new File(assetDir, "shader/quadFragment.glsl"));
+			gpSource = new FileInputStream(new File(assetDir, "infinity-jump.properties"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Error reading shader files");
 			return;

@@ -25,7 +25,7 @@ public class OpenALAPIImpl implements OpenALAPI {
 	public Object newAudio(String file) {
 		URL audio;
 		try {
-			audio = new File(assetDir + "sound/" + file).toURI().toURL();
+			audio = new File(assetDir, "sound/" + file).toURI().toURL();
 		} catch (MalformedURLException e) {
 			System.err.println("Error finding sound file '" + file + "'");
 			return null;

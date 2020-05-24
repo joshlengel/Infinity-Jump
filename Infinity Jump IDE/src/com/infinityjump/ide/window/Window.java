@@ -8,9 +8,11 @@ import java.util.prefs.Preferences;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.game.Launcher;
 import com.infinityjump.ide.Utils;
+import com.infinityjump.ide.window.leveleditor.LevelData;
 import com.infinityjump.ide.window.leveleditor.LevelView;
 import com.infinityjump.ide.window.menu.EditMenu;
 import com.infinityjump.ide.window.menu.FileMenu;
+import com.infinityjump.ide.window.menu.SettingsMenu;
 import com.infinityjump.ide.window.menu.TestMenu;
 import com.infinityjump.ide.window.menu.ViewMenu;
 
@@ -37,6 +39,8 @@ public class Window extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Launcher.init(assetDir);
+		GlobalProperties.init(assetDir);
+		LevelData.init();
 		
 		stage.setTitle("Infinity Jump IDE");
 		
@@ -72,8 +76,9 @@ public class Window extends Application {
 		EditMenu editMenu = new EditMenu(levelView, luaEditorView);
 		ViewMenu viewMenu = new ViewMenu(levelView);
 		TestMenu testMenu = new TestMenu(levelView, luaEditorView, theme, assetDir);
+		SettingsMenu settingsMenu = new SettingsMenu();
 		
-		menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, testMenu);
+		menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, testMenu, settingsMenu);
 		
 		menuBar.setVisible(true);
 		

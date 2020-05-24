@@ -10,8 +10,7 @@ import com.infinityjump.ide.window.leveleditor.LevelData.QuadEdge;
 
 public class MouseHandler {
 
-	/// TODO Move to config files or settings
-	private static final double MOUSE_DRAG_SENSITIVITY = 1.0d;
+	private static double sensitivity;
 	
 	private LevelData data;
 	
@@ -61,8 +60,8 @@ public class MouseHandler {
 	}
 	
 	public void handleLeftDrag(double mx, double my) {
-		double dx = (mx - data.mouseX) * MOUSE_DRAG_SENSITIVITY;
-		double dy = (my - data.mouseY) * MOUSE_DRAG_SENSITIVITY;
+		double dx = (mx - data.mouseX) * sensitivity;
+		double dy = (my - data.mouseY) * sensitivity;
 		
 		if (data.draggingEdge != null) {
 			float glX = (float) mouseToGLX();
@@ -325,5 +324,9 @@ public class MouseHandler {
 		double rScrollY = data.scrollY * data.cacheInvWidth * 2.0;
 		
 		return (float) ((1.0 - data.mouseY * data.cacheInvWidth * 2.0) * data.cacheInvZoom + rScrollY);
+	}
+	
+	public static void setSensitivity(double sensitivity) {
+		MouseHandler.sensitivity = sensitivity;
 	}
 }

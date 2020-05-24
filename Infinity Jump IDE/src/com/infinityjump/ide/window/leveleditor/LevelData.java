@@ -11,18 +11,26 @@ import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.Target;
 import com.infinityjump.core.game.base.quad.QuadShape;
 import com.infinityjump.core.game.customizable.TeleportBlock;
+import com.infinityjump.ide.window.GlobalProperties;
 import com.infinityjump.ide.window.properties.PropertyPanel;
 
 import javafx.scene.control.SplitPane;
 
 public class LevelData {
 	
-	public static final float DEFAULT_QUAD_SIZE = 0.2f;
+	public static float DEFAULT_QUAD_SIZE;
 	
-	public static final double EDGE_WIDTH = 0.02;
-	public static final float EDGE_WIDTH_F = (float)EDGE_WIDTH;
-	public static final BigDecimal EDGE_WIDTH_BD = new BigDecimal(EDGE_WIDTH);
+	public static double EDGE_WIDTH;
+	public static float EDGE_WIDTH_F;
+	public static BigDecimal EDGE_WIDTH_BD;
 
+	public static void init() {
+		DEFAULT_QUAD_SIZE = Float.parseFloat(GlobalProperties.properties.getProperty("default-quad-size"));
+		EDGE_WIDTH = Float.parseFloat(GlobalProperties.properties.getProperty("highlighted-edge-width"));
+		EDGE_WIDTH_F = (float)EDGE_WIDTH;
+		EDGE_WIDTH_BD = new BigDecimal(EDGE_WIDTH);
+	}
+	
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
 	public static final int BOTTOM = 2;
