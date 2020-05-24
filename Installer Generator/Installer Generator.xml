@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="Installer Generator">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="Installer Generator.classpath">
+        <pathelement location="bin"/>
+    </path>
+  	<path id="jar.Installer Generator.classpath">
+  	</path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Installer Generator.classpath"/>
+        </javac>
+    </target>
+    <target name="export" depends="clean, build">
+    	<jar basedir="bin" destfile="dist/Installer Generator.jar">
+    		<manifest>
+	    	    <attribute name="Manifest-Version" value="1.0.0"/>
+	    		<attribute name="Created-By" value="Josh lengel"/>
+	    		<attribute name="Main-Class" value="main.Main"/>
+	    	</manifest>
+    	</jar>
+    	
+    	<zip basedir="src" destfile="dist/Installer Generator-src.zip"/>
+    	    	
+    	<copy file="dist/Installer Generator.jar" toDir="../Infinity Jump IDE/dist/build"/>
+    	<copy file="dist/Installer Generator-src.zip" toDir="../Infinity Jump IDE/dist/build"/>
+    </target>
+
+</project>

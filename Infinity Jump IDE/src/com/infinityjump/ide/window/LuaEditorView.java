@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.infinityjump.ide.Utils;
+
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 
@@ -36,6 +38,10 @@ public class LuaEditorView extends Pane {
 		}
 		
 		editor.setText(builder.toString());
+	}
+	
+	public void reset() {
+		editor.setText(Utils.getDefaultScript());
 	}
 	
 	public String getScript() {

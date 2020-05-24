@@ -1,5 +1,6 @@
 package com.infinityjump.ide.window.menu;
 
+import com.infinityjump.ide.window.LuaEditorView;
 import com.infinityjump.ide.window.leveleditor.LevelView;
 
 import javafx.scene.control.Menu;
@@ -8,17 +9,26 @@ import javafx.scene.input.KeyCombination;
 
 public class EditMenu extends Menu {
 
-	public EditMenu(LevelView view) {
+	public EditMenu(LevelView levelView, LuaEditorView editorView) {
 		super("_Edit");
 		
 		MenuItem newQuadMI = new MenuItem("Add new Quad");
 		
 		newQuadMI.setOnAction(e -> {
-			view.spawnQuad();
+			levelView.spawnQuad();
 		});
 		
 		newQuadMI.setAccelerator(KeyCombination.valueOf("Alt+Q"));
 		
-		super.getItems().addAll(newQuadMI);
+		MenuItem resetMI = new MenuItem("Reset");
+		
+		resetMI.setOnAction(e -> {
+			levelView.reset();
+			editorView.reset();
+		});
+		
+		resetMI.setAccelerator(KeyCombination.valueOf("Ctrl+R"));
+		
+		super.getItems().addAll(newQuadMI, resetMI);
 	}
 }

@@ -1,10 +1,13 @@
 package com.infinityjump.ide.window;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.prefs.Preferences;
 
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.game.Launcher;
+import com.infinityjump.ide.Utils;
 import com.infinityjump.ide.window.leveleditor.LevelView;
 import com.infinityjump.ide.window.menu.EditMenu;
 import com.infinityjump.ide.window.menu.FileMenu;
@@ -22,6 +25,9 @@ import javafx.stage.Stage;
 public class Window extends Application {
 
 	private static String assetDir;
+	
+	private LevelView levelView;
+	private LuaEditorView luaEditorView;
 	
 	public static void main(String[] args) {
 		assetDir = args[0];
@@ -43,27 +49,29 @@ public class Window extends Application {
 		SplitPane center = new SplitPane();
 		center.setOrientation(Orientation.HORIZONTAL);
 		
-		InputStream levelStream = new FileInputStream(assetDir + "default_level.lev");
-		InputStream defaultScript = new FileInputStream(assetDir + "default_script.lua");
+		Preferences prefs = Preferences.userRoot();
+		
+		InputStream levelStream = new ByteArrayInputStream(prefs.get("levelSource", Utils.getDefaultLevel()).getBytes());
+		InputStream defaultScript = new ByteArrayInputStream(prefs.get("scriptSource", Utils.getDefaultScript()).getBytes());
 		
 		InputStream themeStream = new FileInputStream(assetDir + "default-theme.properties");
 		Theme theme = new Theme(themeStream);
 		themeStream.close();
 		
-		LevelView levelView = new LevelView(center, theme);
+		levelView = new LevelView(center, theme);
 		levelView.load(levelStream);
 		
-		LuaEditorView ijsEditor = new LuaEditorView();
-		ijsEditor.load(defaultScript);
+		luaEditorView = new LuaEditorView();
+		luaEditorView.load(defaultScript);
 		
 		levelStream.close();
 		
 		MenuBar menuBar = new MenuBar();
 		
-		FileMenu fileMenu = new FileMenu(levelView, ijsEditor);
-		EditMenu editMenu = new EditMenu(levelView);
+		FileMenu fileMenu = new FileMenu(levelView, luaEditorView);
+		EditMenu editMenu = new EditMenu(levelView, luaEditorView);
 		ViewMenu viewMenu = new ViewMenu(levelView);
-		TestMenu testMenu = new TestMenu(levelView, ijsEditor, theme, assetDir);
+		TestMenu testMenu = new TestMenu(levelView, luaEditorView, theme, assetDir);
 		
 		menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, testMenu);
 		
@@ -73,7 +81,7 @@ public class Window extends Application {
 		
 		center.getItems().add(levelView);
 		
-		editor.getItems().addAll(center, ijsEditor);
+		editor.getItems().addAll(center, luaEditorView);
 		
 		root.setCenter(editor);
 
@@ -81,5 +89,16 @@ public class Window extends Application {
 		stage.show();
 		
 		levelView.repaint();
+	}
+	
+	@Override
+	public void stop() {
+		// save unsaved changes
+		String level = levelView.makeLevelSource();
+		String script = luaEditorView.getScript();
+		
+		Preferences prefs = Preferences.userRoot();
+		prefs.put("levelSource", level);
+		prefs.put("scriptSource", script);
 	}
 }

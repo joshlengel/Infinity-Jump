@@ -20,7 +20,7 @@ public class TeleportBlockPropertiesPanel extends PropertyPanel {
 		this.block = block;
 		
 		TitledPane channelProperty = new TitledPane();
-		channelProperty.setText("Teleport Quad Properties");
+		channelProperty.setText("Teleport Block Properties");
 		
 		GridPane channel = new GridPane();
 		channel.setHgap(5.0d);

@@ -1,5 +1,6 @@
 package com.infinityjump.ide.window.leveleditor;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Map.Entry;
@@ -14,6 +15,7 @@ import com.infinityjump.core.game.customizable.DeadlyBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.game.properties.QuadProperties;
+import com.infinityjump.ide.Utils;
 import com.infinityjump.ide.window.properties.BlockPropertiesPanel;
 import com.infinityjump.ide.window.properties.BoundaryPropertiesPanel;
 import com.infinityjump.ide.window.properties.PlayerPropertiesPanel;
@@ -271,6 +273,10 @@ public class LevelView extends Pane {
 	private void drawRect(GraphicsContext context, Rectangle rect, Color color, double zScrollX, double zScrollY) {
 		context.setFill(color);
 		context.fillRect(rect.getX() - zScrollX, rect.getY() * data.aspectRatio + zScrollY, rect.getWidth(), rect.getHeight() * data.aspectRatio);
+	}
+	
+	public void reset() {
+		load(new ByteArrayInputStream(Utils.getDefaultLevel().getBytes()));
 	}
 	
 	public String makeLevelSource() {

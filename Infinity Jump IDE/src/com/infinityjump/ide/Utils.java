@@ -34,4 +34,19 @@ public class Utils {
 				|| boundary.getBottom().doubleValue() > mouseY
 				|| boundary.getTop().doubleValue() < mouseY;
 	}
+	
+	public static String getDefaultLevel() {
+		return "player[size=0.1, x=0.0, y=0.0]\r\n" + 
+				"target[left=-1.0, right=-0.8, bottom=-1.0, top=-0.8]\r\n" + 
+				"\r\n" + 
+				"boundary[left=-1.0, right=1.0, bottom=-1.0, top=1.0]";
+	}
+	
+	public static String getDefaultScript() {
+		return "function setup()\r\n" +
+				"end\r\n" + 
+				"\r\n" +
+				"function update(dt)\r\n" +
+				"end\r\n";
+	}
 }
