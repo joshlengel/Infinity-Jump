@@ -12,6 +12,7 @@ import com.infinityjump.core.game.base.Type;
 import com.infinityjump.core.game.base.quad.QuadShape;
 import com.infinityjump.core.game.customizable.BouncyBlock;
 import com.infinityjump.core.game.customizable.DeadlyBlock;
+import com.infinityjump.core.game.customizable.IceBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.game.properties.QuadProperties;
@@ -390,6 +391,7 @@ public class LevelView extends Pane {
 			case DEADLY: nBlock = new DeadlyBlock(left, right, bottom, top); break;
 			case STICKY: nBlock = new StickyBlock(left, right, bottom, top); break;
 			case TELEPORT: nBlock = new TeleportBlock(left, right, bottom, top, 0, TeleportBlock.EjectType.LEFT_BOTTOM); break;
+			case ICE: nBlock = new IceBlock(left, right, bottom, top); break;
 			default: 
 			case NORMAL: nBlock = new Block(left, right, bottom, top); break;
 		}

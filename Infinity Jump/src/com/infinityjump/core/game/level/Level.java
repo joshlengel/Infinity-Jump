@@ -19,6 +19,7 @@ import com.infinityjump.core.game.base.Block;
 import com.infinityjump.core.game.base.Target;
 import com.infinityjump.core.game.customizable.BouncyBlock;
 import com.infinityjump.core.game.customizable.DeadlyBlock;
+import com.infinityjump.core.game.customizable.IceBlock;
 import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.graphics.particles.ParticleRenderer;
@@ -112,6 +113,7 @@ public final class Level {
 					case "deadly": quad = new DeadlyBlock(dLeft, dRight, dBottom, dTop); break;
 					case "bouncy": quad = new BouncyBlock(dLeft, dRight, dBottom, dTop); break;
 					case "sticky": quad = new StickyBlock(dLeft, dRight, dBottom, dTop); break;
+					case "ice":    quad = new IceBlock(dLeft, dRight, dBottom, dTop); break;
 					case "teleport":
 						TeleportBlock.EjectType eT = TeleportBlock.EjectType.parseType(ejectType);
 						

@@ -16,7 +16,8 @@ public enum Type {
 	DEADLY("deadly", QuadProperties::new),
 	BOUNCY("bouncy", BouncyProperties::new),
 	STICKY("sticky", BlockProperties::new),
-	TELEPORT("teleport", QuadProperties::new);
+	TELEPORT("teleport", QuadProperties::new),
+	ICE("ice", BlockProperties::new);
 	
 	public static final Type[] CUSTOMIZABLES;
 	
