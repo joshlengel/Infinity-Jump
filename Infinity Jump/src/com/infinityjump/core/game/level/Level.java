@@ -17,10 +17,7 @@ import com.infinityjump.core.game.Collision;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Block;
 import com.infinityjump.core.game.base.Target;
-import com.infinityjump.core.game.customizable.BouncyBlock;
-import com.infinityjump.core.game.customizable.DeadlyBlock;
-import com.infinityjump.core.game.customizable.IceBlock;
-import com.infinityjump.core.game.customizable.StickyBlock;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.graphics.particles.ParticleRenderer;
 import com.infinityjump.core.graphics.quads.QuadRenderer;
@@ -62,76 +59,29 @@ public final class Level {
 			
 			while((line = reader.readLine()) != null) {
 				if (line.startsWith("quad")) {
-					Integer id = null;
-					Float left = null;
-					Float right = null;
-					Float bottom = null;
-					Float top = null;
-					String type = null;
-					
-					Integer linkID = null; // only for teleportation
-					String ejectType = null; // only for teleportation
-					
 					String[] args = Patterns.commaWithSpaces.split(Patterns.braces.split(line)[1]);
 					
-					for(String arg : args) {
+					Map<String, String> argsMap = new HashMap<>();
+					
+					for (String arg : args) {
 						String[] pair = Patterns.equals.split(arg);
 						
-						if (pair[0].contentEquals("id")) {
-							id = Integer.parseInt(pair[1]);
-						} else if (pair[0].contentEquals("left")) {
-							left = Float.parseFloat(pair[1]);
-						} else if (pair[0].contentEquals("right")) {
-							right = Float.parseFloat(pair[1]);
-						} else if (pair[0].contentEquals("bottom")) {
-							bottom = Float.parseFloat(pair[1]);
-						} else if (pair[0].contentEquals("top")) {
-							top = Float.parseFloat(pair[1]);
-						} else if (pair[0].contentEquals("type")) {
-							type = pair[1];
-						} else if (pair[0].contentEquals("channel")) {
-							linkID = Integer.parseInt(pair[1]);
-						} else if (pair[0].contentEquals("eject-type")) {
-							ejectType = pair[1];
+						argsMap.put(pair[0], pair[1]);
+					}
+					
+					Block block = null;
+					Integer id = Integer.parseInt(argsMap.get("id"));
+					
+					for (Type type : Type.CUSTOMIZABLES) {
+						if (type.toString().contentEquals(argsMap.get("type"))) {
+							block = type.getBlockLoader().parse(argsMap);
+							break;
 						}
 					}
 					
-					if (id == null || left == null || right == null || bottom == null || top == null) {
-						Logger.getAPI().error("Quad must define left, right, bottom, top and id");
-						return;
-					}
+					Block cloned = block.clone();
 					
-					BigDecimal dLeft = new BigDecimal(left);
-					BigDecimal dRight = new BigDecimal(right);
-					BigDecimal dBottom = new BigDecimal(bottom);
-					BigDecimal dTop = new BigDecimal(top);
-					
-					Block quad = null;
-					
-					switch (type) {
-					case "normal": quad = new Block(dLeft, dRight, dBottom, dTop); break;
-					case "deadly": quad = new DeadlyBlock(dLeft, dRight, dBottom, dTop); break;
-					case "bouncy": quad = new BouncyBlock(dLeft, dRight, dBottom, dTop); break;
-					case "sticky": quad = new StickyBlock(dLeft, dRight, dBottom, dTop); break;
-					case "ice":    quad = new IceBlock(dLeft, dRight, dBottom, dTop); break;
-					case "teleport":
-						TeleportBlock.EjectType eT = TeleportBlock.EjectType.parseType(ejectType);
-						
-						if (linkID == null || eT == null) {
-							Logger.getAPI().error("Must specify channel and eject-type properties of teleport quad");
-							return;
-						}
-						
-						quad = new TeleportBlock(dLeft, dRight, dBottom, dTop, linkID, eT);
-						break;
-					default:
-						Logger.getAPI().error("Quad must define type");
-						return;
-					}
-					
-					Block cloned = quad.clone();
-					
-					this.initBlocks.put(id, quad);
+					this.initBlocks.put(id, block);
 					this.blocks.put(id, cloned); // not the same instance
 					
 				} else if (line.startsWith("player")) {
@@ -361,7 +311,7 @@ public final class Level {
 	}
 	
 	public void render(Theme theme, float shiftX, float playerAlpha) {
-		quadRenderer.render(camera, theme, shiftX);
+		quadRenderer.render(camera, theme, shiftX, playerAlpha);
 		particleRenderer.render(camera, shiftX);
 	}
 	

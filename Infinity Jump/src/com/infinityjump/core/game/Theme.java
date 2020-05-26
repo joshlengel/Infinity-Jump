@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.infinityjump.core.api.Logger;
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.properties.QuadProperties;
 
 public class Theme {

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.properties.TargetProperties;
 import com.infinityjump.core.state.GameState;

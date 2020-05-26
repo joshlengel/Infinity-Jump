@@ -7,6 +7,7 @@ import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.properties.BlockProperties;
 import com.infinityjump.core.game.base.quad.QuadCollidable;
 import com.infinityjump.core.game.base.quad.QuadShapeImpl;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.level.Level;
 
 public class Block extends QuadShapeImpl implements QuadCollidable {

@@ -8,12 +8,8 @@ import java.util.Map.Entry;
 import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Block;
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.base.quad.QuadShape;
-import com.infinityjump.core.game.customizable.BouncyBlock;
-import com.infinityjump.core.game.customizable.DeadlyBlock;
-import com.infinityjump.core.game.customizable.IceBlock;
-import com.infinityjump.core.game.customizable.StickyBlock;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.core.game.properties.QuadProperties;
 import com.infinityjump.ide.Utils;
@@ -378,23 +374,13 @@ public class LevelView extends Pane {
 	}
 	
 	public Block setNewBlockType(int id, Type type) {
-		Block quad = data.blocks.get(id);
-		BigDecimal left = quad.getLeft();
-		BigDecimal right = quad.getRight();
-		BigDecimal bottom = quad.getBottom();
-		BigDecimal top = quad.getTop();
+		Block block = data.blocks.get(id);
+		BigDecimal left = block.getLeft();
+		BigDecimal right = block.getRight();
+		BigDecimal bottom = block.getBottom();
+		BigDecimal top = block.getTop();
 		
-		Block nBlock = null;
-		
-		switch (type) {
-			case BOUNCY: nBlock = new BouncyBlock(left, right, bottom, top); break;
-			case DEADLY: nBlock = new DeadlyBlock(left, right, bottom, top); break;
-			case STICKY: nBlock = new StickyBlock(left, right, bottom, top); break;
-			case TELEPORT: nBlock = new TeleportBlock(left, right, bottom, top, 0, TeleportBlock.EjectType.LEFT_BOTTOM); break;
-			case ICE: nBlock = new IceBlock(left, right, bottom, top); break;
-			default: 
-			case NORMAL: nBlock = new Block(left, right, bottom, top); break;
-		}
+		Block nBlock = type.getBlockLoader().getDefault(left, right, bottom, top);
 		
 		data.blocks.put(id, nBlock);
 		

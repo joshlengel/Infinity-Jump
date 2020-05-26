@@ -8,6 +8,7 @@ import com.infinityjump.core.game.Camera;
 import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Boundary;
+import com.infinityjump.core.game.base.Player;
 import com.infinityjump.core.game.base.quad.QuadShape;
 import com.infinityjump.core.graphics.GraphicsAssets;
 
@@ -23,7 +24,7 @@ public class QuadRenderer {
 		renderables.clear();
 	}
 	
-	public void render(Camera camera, Theme theme, float shiftX) {
+	public void render(Camera camera, Theme theme, float shiftX, float playerAlpha) {
 		GraphicsAssets.quadShader.bind();
 		GraphicsAssets.quadShader.setAspectRatio(Input.getAPI().getAspectRatio());
 		GraphicsAssets.quadShader.setShiftX(shiftX);
@@ -35,6 +36,11 @@ public class QuadRenderer {
 				c = theme.getProperties("background").color;
 			} else {
 				c = theme.getProperties(r.getType().toString()).color;
+				
+				if (r instanceof Player) {
+					c = new Color(c); // create copy so alpha doesn't change permanently
+					c.a *= playerAlpha;
+				}
 			}
 			
 			GraphicsAssets.quadShader.setOffset(r.getX().floatValue() - camera.getX(), r.getY().floatValue() - camera.getY());

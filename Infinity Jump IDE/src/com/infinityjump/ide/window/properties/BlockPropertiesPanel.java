@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map.Entry;
 
 import com.infinityjump.core.game.base.Block;
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.customizable.TeleportBlock;
 import com.infinityjump.ide.window.leveleditor.LevelView;
 

@@ -2,7 +2,7 @@ package com.infinityjump.core.game.base.quad;
 
 import java.math.BigDecimal;
 
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.utils.BigConstants;
 
 public abstract class QuadShapeImpl implements QuadShape {

@@ -3,8 +3,12 @@ package com.infinityjump.core.state;
 import java.util.Map;
 
 import com.infinityjump.core.api.Input;
+import com.infinityjump.core.api.OpenGL;
+import com.infinityjump.core.api.OpenGL.OpenGLAPI;
+import com.infinityjump.core.game.Color;
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.load.Playable;
+import com.infinityjump.core.game.properties.BlockProperties;
 
 public class RestartState implements State {
 
@@ -44,6 +48,13 @@ public class RestartState implements State {
 
 	@Override
 	public void render() {
+		Color boundaryColor = ((BlockProperties)theme.getProperties("normal")).color;
+		
+		OpenGLAPI api = OpenGL.getAPI();
+		
+		api.clearColor(boundaryColor.r, boundaryColor.g, boundaryColor.b, boundaryColor.a);
+		api.clear();
+		
 		playable.render(theme, 0.0f, (float)(1.0f - timer / FADE_TIME));
 	}
 }

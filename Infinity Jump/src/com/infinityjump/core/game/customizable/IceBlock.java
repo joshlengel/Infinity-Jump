@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Theme;
 import com.infinityjump.core.game.base.Block;
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.level.Level;
 import com.infinityjump.core.game.properties.BlockProperties;
 

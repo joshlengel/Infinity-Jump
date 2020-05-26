@@ -13,7 +13,8 @@ public class Camera {
 	}
 	
 	private Player player;
-	private float x, y, tX, tY;
+	private float x, y;
+	private Float tX, tY;
 	
 	public Camera(Player player) {
 		this.player = player;
@@ -27,7 +28,7 @@ public class Camera {
 	}
 	
 	public void update(double dt) {
-		if (tX == 0 && tY == 0) {
+		if (tX == null && tY == null) {
 			if (player.getLeft().floatValue() - x < SCROLL_MARGIN - 1.0f) {
 				x = player.getLeft().floatValue() - (SCROLL_MARGIN - 1.0f);
 			} else if (player.getRight().floatValue() - x > 1.0f - SCROLL_MARGIN) {
@@ -41,6 +42,9 @@ public class Camera {
 			}
 		} else {
 		
+			if (tX == null) tX = x;
+			if (tY == null) tY = y;
+			
 			/*
 			tX = player.getX().floatValue();
 			tY = player.getY().floatValue();
@@ -54,11 +58,11 @@ public class Camera {
 			
 			if (speedX > SCROLL_SPEED) speedX = SCROLL_SPEED;
 			else if (speedX < -SCROLL_SPEED) speedX = -SCROLL_SPEED;
-			else tX = 0;
+			else tX = null;
 			
 			if (speedY > SCROLL_SPEED) speedY = SCROLL_SPEED;
 			else if (speedY < -SCROLL_SPEED) speedY = -SCROLL_SPEED;
-			else tY = 0;
+			else tY = null;
 			
 			x += speedX * dt;
 			y += speedY * dt;
@@ -66,8 +70,7 @@ public class Camera {
 	}
 	
 	public void reset() {
-		this.x = player.getX().floatValue();
-		this.y = player.getY().floatValue();
+		requestJump(player.getX().floatValue(), player.getY().floatValue());
 	}
 	
 	public float getX() {

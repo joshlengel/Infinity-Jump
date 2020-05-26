@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import com.infinityjump.core.game.Collision;
 import com.infinityjump.core.game.base.Player;
-import com.infinityjump.core.game.base.Type;
+import com.infinityjump.core.game.base.type.Type;
 import com.infinityjump.core.game.base.Block;
 
 public class StickyBlock extends Block {
