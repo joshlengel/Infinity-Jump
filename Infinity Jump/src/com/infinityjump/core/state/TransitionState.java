@@ -61,9 +61,9 @@ public class TransitionState implements State {
 		api.clearColor(boundaryColor.r, boundaryColor.g, boundaryColor.b, boundaryColor.a);
 		api.clear();
 		
-		float shiftX = (float) (timer / TRANSITION_LENGTH * totalShiftDist);
+		float shiftX = (float) -(timer / TRANSITION_LENGTH * totalShiftDist);
 		
 		previous.render(theme, shiftX, 1.0f);
-		next.render(theme, shiftX - totalShiftDist, 1.0f);
+		next.render(theme, shiftX + totalShiftDist, 1.0f);
 	}
 }
